@@ -103,9 +103,9 @@ public class RegistrationScreen extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Log.i("savedindatabase", "user with email is saved: " + newUser.getEmail());
+                                        //Log.i("savedindatabase", "user with email is saved: " + newUser.getEmail());
                                     } else {
-                                        Log.i("usernotsaved", "could not save user to database " + task.getException());
+                                        //Log.i("usernotsaved", "could not save user to database " + task.getException());
                                         registerProgressBar.setVisibility(View.GONE);
                                     }
                                 }
@@ -114,7 +114,7 @@ public class RegistrationScreen extends AppCompatActivity {
                             startActivity(new Intent(RegistrationScreen.this, MainTabbedActivity.class));
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.i("registerfailed", "Creation of new user failed", task.getException());
+                            //Log.i("registerfailed", "Creation of new user failed", task.getException());
                             Toast.makeText(RegistrationScreen.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             registerProgressBar.setVisibility(View.GONE);
                         }

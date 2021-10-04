@@ -97,15 +97,14 @@ public class LoginScreen extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser currentUser = mAuth.getCurrentUser();
-                            Log.i("signinpassed", "user signed in " + currentUser.getEmail());
+                            //Log.i("signinpassed", "user signed in " + currentUser.getEmail());
                             Toast.makeText(LoginScreen.this, "Sign In Successful for " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
                             startActivity(new Intent(LoginScreen.this, MainTabbedActivity.class));
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.i("", "signInfailed", task.getException());
+                            //Log.i("", "signInfailed", task.getException());
                             Toast.makeText(LoginScreen.this, "Authentication failed." + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             loginProgressBar.setVisibility(View.GONE);
-                            //updateUI(null);
                         }
                     }
                 });
