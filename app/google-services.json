@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "359386869244",
+    "project_id": "petshuddleauth",
+    "storage_bucket": "petshuddleauth-default-rtdb.firebaseio.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359386869244:android:3c3b308140fde7f55e5679",
+        "android_client_info": {
+          "package_name": "android.portfolio.petshuddle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359386869244-nv3k87ff4887fj5vajf0fudqjinodg5m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8k8X12jBBEgNFJNrzsn8M_sggofRjC04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359386869244-nv3k87ff4887fj5vajf0fudqjinodg5m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
