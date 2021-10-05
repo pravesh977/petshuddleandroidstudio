@@ -7,7 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.portfolio.petshuddle.Entity.User;
 import android.portfolio.petshuddle.UI.MainTabbedActivity;
+import android.portfolio.petshuddle.UI.RegistrationScreen;
 import android.portfolio.petshuddle.UI.WelcomeScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +18,15 @@ import android.view.ViewGroup;
 import android.portfolio.petshuddle.R;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +45,9 @@ public class UserProfileFragment extends Fragment {
     private String mParam2;
 
     private FirebaseAuth mAuth;
+    private String userName;
+    private DatabaseReference databaseReference;
+
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -68,6 +79,7 @@ public class UserProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
     }
 
 //    @Override
@@ -91,14 +103,33 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        TextView userNameTextView = view.findViewById(R.id.userNameTextView);
         TextView userEmailTextView = view.findViewById(R.id.userEmailTextView);
+        TextView userIdTextView = view.findViewById(R.id.userIdTextView);
         Button signOutButton = view.findViewById(R.id.signOutButton);
         signOutButton.setOnClickListener(handleSignOut);
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        String currentUserId = currentUser.getUid();
+        databaseReference.child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+                if(userProfile != null) {
+                    String fullName = userProfile.getFullName();
+                    userNameTextView.setText(fullName);
+                }
+//                String fullName = snapshot.getValue(String.class);
+//                userIdTextView.setText(fullName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "something went wrong", Toast.LENGTH_LONG).show();
+            }
+        });
         if(currentUser != null) {
-            //Log.i("user is : ",  currentUser.getEmail());
             userEmailTextView.setText(currentUser.getEmail());
+            userIdTextView.setText(currentUserId);
         }
     }
 

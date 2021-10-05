@@ -99,7 +99,7 @@ public class RegistrationScreen extends AppCompatActivity {
 
                             //creating a new User object with the textfield values
                             User newUser = new User(name, email);
-                            mDatabase.getReference().child(currentUserId).setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            mDatabase.getReference("Users").child(currentUserId).setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {

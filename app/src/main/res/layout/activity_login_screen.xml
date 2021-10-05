@@ -27,27 +27,26 @@
 
         <EditText
             android:id="@+id/loginEmailEditText"
+            style="@style/FormStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:layout_weight="1"
-            android:inputType="textEmailAddress"
+            android:ems="10"
             android:hint="email"
-            style="@style/FormStyle"
-            />
+            android:inputType="textEmailAddress"
+            android:text="sashadog@mail.com" />
 
         <EditText
             android:id="@+id/loginPasswordEditText"
+            style="@style/FormStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:layout_weight="1"
-            android:inputType="textPassword"
-            android:hint="password"
-            style="@style/FormStyle"
             android:layout_marginTop="10dp"
-
-            />
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="password"
+            android:inputType="textPassword"
+            android:text="Sashadog" />
     </LinearLayout>
 
     <LinearLayout
