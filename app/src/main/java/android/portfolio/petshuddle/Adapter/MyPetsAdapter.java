@@ -1,9 +1,10 @@
 package android.portfolio.petshuddle.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.portfolio.petshuddle.Entity.Pet;
-import android.portfolio.petshuddle.Entity.User;
 import android.portfolio.petshuddle.R;
+import android.portfolio.petshuddle.UI.SinglePetScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,51 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.ViewHolder
             petNameList = itemView.findViewById(R.id.petNameList);
             petAgeList = itemView.findViewById(R.id.petAgeList);
             petSexList = itemView.findViewById(R.id.petSexList);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    final Pet currentPet = myPetsList.get(position);
+                    Intent intent = new Intent(context, SinglePetScreen.class);
+                    intent.putExtra("petId", currentPet.getPetId());
+                    intent.putExtra("petName", currentPet.getPetName());
+                    intent.putExtra("species", currentPet.getSpecies());
+                    intent.putExtra("sex", currentPet.getSex());
+                    intent.putExtra("breed", currentPet.getBreed());
+                    intent.putExtra("age", currentPet.getAge());
+                    intent.putExtra("description", currentPet.getPetDescription());
+                    intent.putExtra("userId", currentPet.getUserId());
+                    context.startActivity(intent);
+//                    Log.i("clicked pet", currentPet.getPetName());
+
+                }
+            });
         }
     }
 
-    private List<Pet> myPetsList;
+//    termItemView = itemView.findViewById(R.id.termTextView);
+//            itemView.setOnClickListener(new View.OnClickListener(){
+//        @Override
+//        public void onClick(View v) {
+//            int position = getAdapterPosition();
+//            final TermEntity current = mTerms.get(position);
+//            Intent intent = new Intent(context, CoursesActivity.class);
+//            intent.putExtra("termId", current.getTermId());
+//            intent.putExtra("termTitle", current.getTermTitle());
+//            intent.putExtra("termStart", current.getTermStart());
+//            intent.putExtra("termEnd", current.getTermEnd());
+//            context.startActivity(intent);
+////                    Log.i("termclicked", "term is being clicked");
+////                    Log.i("thisterm",String.valueOf(current.getTermId()));
+//        }
+//    });
 
-    public MyPetsAdapter(List<Pet> pets) {
+    private List<Pet> myPetsList;
+    private Context context;
+
+    public MyPetsAdapter(List<Pet> pets, Context context) {
         this.myPetsList = pets;
+        this.context = context;
     }
 
 

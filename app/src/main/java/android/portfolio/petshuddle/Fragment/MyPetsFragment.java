@@ -116,7 +116,7 @@ public class MyPetsFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                MyPetsAdapter myPetsAdapter = new MyPetsAdapter(myPetsList);
+                MyPetsAdapter myPetsAdapter = new MyPetsAdapter(myPetsList, getContext());
                 myPetsRecyclerView.setAdapter(myPetsAdapter);
                 myPetsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 //                for(Pet element:myPetsList) {

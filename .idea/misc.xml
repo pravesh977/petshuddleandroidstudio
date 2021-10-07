@@ -9,11 +9,12 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23505434782608695" />
         <entry key="app/src/main/res/layout/activity_main_tabbed.xml" value="0.23324275362318841" />
         <entry key="app/src/main/res/layout/activity_registration_screen.xml" value="0.232097030948169" />
+        <entry key="app/src/main/res/layout/activity_single_pet_screen.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_welcome_screen.xml" value="0.2269021739130435" />
         <entry key="app/src/main/res/layout/fragment_event.xml" value="0.1859375" />
         <entry key="app/src/main/res/layout/fragment_my_pets.xml" value="0.1859375" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.1859375" />
-        <entry key="app/src/main/res/layout/fragment_user_profile.xml" value="0.36821200827590794" />
+        <entry key="app/src/main/res/layout/fragment_user_profile.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/pet_item.xml" value="0.1" />
       </map>
     </option>

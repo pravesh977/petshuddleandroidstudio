@@ -42,4 +42,8 @@
         <item name="android:textSize">20sp</item>
         <item name="fontFamily">@font/kalamregular</item>
     </style>
+    <style name="PetsListStyle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:textSize">24sp</item>
+        <item name="fontFamily">@font/kalamregular</item>
+    </style>
 </resources>
