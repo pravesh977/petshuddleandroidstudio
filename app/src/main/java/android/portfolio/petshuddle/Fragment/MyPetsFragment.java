@@ -5,7 +5,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
+import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +29,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MyPetsFragment#newInstance} factory method to
@@ -41,7 +48,9 @@ public class MyPetsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private TextView myPetsTextView;
+//    private TextView myPetsTextView;
+    private List<Pet> myPetsList = new ArrayList<>();
+    private RecyclerView myPetsRecyclerView;
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -72,47 +81,58 @@ public class MyPetsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         // Instantiate the RequestQueue.
-        //RequestQueue queue = Volley.newRequestQueue(getActivity());
         RequestQueue queue = MySingletonRequestQueue.getInstance(this.getActivity()).getRequestQueue();
         String url ="http://10.0.2.2:8080/api/petshuddle";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                myPetsTextView.setText(response.toString());
-//                Log.i("responseis", response.toString());
-//                int respleng = response.length();
-
+//                myPetsTextView.setText(response.toString());
 
                 //for loop works to get each name
                 for(int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject reqobject = response.getJSONObject(i);
+                        int petId = reqobject.getInt("petId");
                         String petName = reqobject.getString("petName");
-                        Log.i("petName : ", petName);
+                        String species = reqobject.getString("species");
+                        String sex = reqobject.getString("sex");
+                        String breed = reqobject.getString("breed");
+                        int age = reqobject.getInt("age");
+                        String petDescription = reqobject.getString("petDescription");
+                        String userId = reqobject.getString("userId");
+//                        Log.i("petName : ", petName);
+//                        Log.i("Description", petDescription);
+                        Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
+                        myPetsList.add(jsonPet);
+//                        Log.i("petname is: ", jsonPet.getPetName());
+//                        Log.i("pets list increment: ", String.valueOf(myPetsList.size()));
+
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
-                //foreach
-//                for(JSONArray element: response) {
+                MyPetsAdapter myPetsAdapter = new MyPetsAdapter(myPetsList);
+                myPetsRecyclerView.setAdapter(myPetsAdapter);
+                myPetsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//                for(Pet element:myPetsList) {
+//                    Log.i("petobjectnameis :", element.getPetName());
+//                    Log.i("petobjectsexis :", element.getSex());
 //
 //                }
-
-
-//                Log.i("arraylength", String.valueOf(respleng));
+//                Log.i("size of array is :", String.valueOf(myPetsList.size()));
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                Log.e("bigbooboo", error.toString());
                 error.printStackTrace();
             }
         });
 
-        //queue.add(request);
         MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
 
     }
@@ -127,7 +147,9 @@ public class MyPetsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        myPetsTextView = view.findViewById(R.id.myPetsTextView);
+        //myPetsTextView = view.findViewById(R.id.myPetsTextView);
+
+        myPetsRecyclerView = view.findViewById(R.id.myPetsRecyclerView);
 
     }
 }

@@ -7,10 +7,16 @@
     android:background="@color/teal_700">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/myPetsTextView"
+<!--    <TextView-->
+<!--        android:id="@+id/myPetsTextView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="My Pets Fragment" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="My Pets Fragment" />
+        android:layout_height="match_parent"
+        android:id="@+id/myPetsRecyclerView"/>
+
 
 </FrameLayout>
