@@ -1,204 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.SinglePetScreen">
+    tools:context=".UI.SinglePetScreen"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/doghouse" />
-    <ScrollView
+    <FrameLayout
+        android:layout_weight="1"
+        android:id="@+id/petDetailsFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="20dp">
-
-        <LinearLayout
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/roundedpetscornerbackground">
-
-            <TextView
-                style="@style/PetsListStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pet Id:"
-                />
-
-            <TextView
-                android:id="@+id/editTextPetId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Id"
-                android:layout_marginLeft="20dp"
-                style="@style/PetsListStyle"/>
-        </LinearLayout>
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/roundedpetscornerbackground">
-
-        <TextView
-            style="@style/PetsListStyle"
+        android:layout_height="wrap_content">
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+        <ImageView
+            android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name:"
-            />
+            app:srcCompat="@drawable/doghouse" />
 
-        <EditText
-            android:id="@+id/editTextPetName"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Pet Name"
-            android:layout_marginLeft="20dp"
-            style="@style/PetsListStyle"/>
-    </LinearLayout>
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="20dp">
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pet Id:"
+                        />
+
+                    <TextView
+                        android:id="@+id/editTextPetId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Id"
+                        android:layout_marginLeft="20dp"
+                        style="@style/PetsListStyle"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name:"
+                        />
+
+                    <EditText
+                        android:id="@+id/editTextPetName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:text="Pet Name"
+                        android:layout_marginLeft="20dp"
+                        style="@style/PetsListStyle"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Species:"
+                        />
+                    <EditText
+                        android:id="@+id/editTextPetSpecies"
+                        style="@style/PetsListStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Species" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sex:"
+                        />
+
+                    <EditText
+                        android:id="@+id/editTextPetSex"
+                        style="@style/PetsListStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sex" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Breed:"
+                        />
+                    <EditText
+                        android:id="@+id/editTextPetBreed"
+                        style="@style/PetsListStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Breed" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Age:"
+                        />
+                    <EditText
+                        android:id="@+id/editTextPetAge"
+                        style="@style/PetsListStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="Age" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="About Me:"
+                        />
+
+                    <EditText
+                        android:id="@+id/editTextPetDescription"
+                        style="@style/PetsListStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:text="Description" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/roundedpetscornerbackground">
+
+                    <TextView
+                        style="@style/PetsListStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Owner:"
+                        />
+
+                    <EditText
+                        android:id="@+id/editTextPetUserId"
+                        style="@style/PetsListStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="User Id" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/roundedpetscornerbackground">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        >
 
-        <TextView
-            style="@style/PetsListStyle"
+        <Button
+            android:id="@+id/cancelPetEditButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Species:"
-            />
-        <EditText
-            android:id="@+id/editTextPetSpecies"
-            style="@style/PetsListStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Species" />
-    </LinearLayout>
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            style="@style/MainButtons"
+            android:backgroundTint="#E85E5A"
+            android:onClick="handleCancelEditPet"/>
 
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/roundedpetscornerbackground">
-
-        <TextView
-            style="@style/PetsListStyle"
+        <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sex:"
-            />
+            android:layout_weight="1"
+            android:text="Edit"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            style="@style/MainButtons"
+            android:backgroundTint="#A66FFC"/>
 
-        <EditText
-            android:id="@+id/editTextPetSex"
-            style="@style/PetsListStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sex" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/roundedpetscornerbackground">
-
-        <TextView
-            style="@style/PetsListStyle"
+        <Button
+            android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Breed:"
-            />
-        <EditText
-            android:id="@+id/editTextPetBreed"
-            style="@style/PetsListStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Breed" />
+            android:layout_weight="1"
+            android:text="Save"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            style="@style/MainButtons"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/roundedpetscornerbackground">
-
-        <TextView
-            style="@style/PetsListStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Age:"
-            />
-        <EditText
-            android:id="@+id/editTextPetAge"
-            style="@style/PetsListStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:text="Age" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/roundedpetscornerbackground">
-
-        <TextView
-            style="@style/PetsListStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="About Me:"
-            />
-
-        <EditText
-            android:id="@+id/editTextPetDescription"
-            style="@style/PetsListStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:text="Description" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/roundedpetscornerbackground">
-
-        <TextView
-            style="@style/PetsListStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Owner:"
-            />
-
-        <EditText
-            android:id="@+id/editTextPetUserId"
-            style="@style/PetsListStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="User Id" />
-    </LinearLayout>
-
-    </LinearLayout>
-    </ScrollView>
-
-</FrameLayout>
+</LinearLayout>

@@ -20,5 +20,18 @@
         android:id="@+id/myPetsRecyclerView" >
     </androidx.recyclerview.widget.RecyclerView>
 
+    <Button
+        android:drawableTop="@drawable/ic_greendoghouse"
+        android:id="@+id/addPetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Pet"
+        android:layout_gravity="bottom|right"
+        android:textColor="@color/white"
+        style="@style/MainButtons"
+        android:backgroundTint="#30E85E5A"
+        android:layout_marginBottom="10dp"
+        />
+
 
 </FrameLayout>

@@ -10,8 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PetsHuddle">
         <activity
-            android:name=".UI.SinglePetScreen"
+            android:name=".UI.AddNewPetScreen"
+            android:noHistory="true"
             android:exported="true" />
+        <activity
+            android:name=".UI.SinglePetScreen"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".UI.MainTabbedActivity"
             android:exported="true" />
@@ -31,8 +36,8 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

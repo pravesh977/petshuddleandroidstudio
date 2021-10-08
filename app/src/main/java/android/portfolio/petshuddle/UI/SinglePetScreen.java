@@ -2,8 +2,10 @@ package android.portfolio.petshuddle.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.portfolio.petshuddle.R;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -63,4 +65,10 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetDescription.setText(petDescription);
         editTextPetUserId.setText(userId);
     }
+
+    public void handleCancelEditPet(View view) {
+        this.finish();
+    }
+
+
 }
