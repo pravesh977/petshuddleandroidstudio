@@ -14,9 +14,10 @@
         <!--        app:layout_constraintTop_toTopOf="parent"-->
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/doghouse" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/rabbitimage"
+            android:scaleType="centerCrop"/>
 
         <ScrollView
             android:layout_width="match_parent"

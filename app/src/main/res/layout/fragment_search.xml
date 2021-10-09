@@ -8,8 +8,15 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/cooltext"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Search Fragment" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>

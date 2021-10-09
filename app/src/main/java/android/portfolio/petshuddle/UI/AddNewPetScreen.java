@@ -13,6 +13,7 @@ import android.portfolio.petshuddle.R;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -71,7 +73,7 @@ public class AddNewPetScreen extends AppCompatActivity {
         //Pet newPet = new Pet(0, petName, species, sex, breed, Integer.parseInt(age), description, currentUserId);
 
         // Instantiate the RequestQueue.
-        RequestQueue queue = MySingletonRequestQueue.getInstance(this).getRequestQueue();
+        //RequestQueue queue = MySingletonRequestQueue.getInstance(this).getRequestQueue();
         String url ="http://10.0.2.2:8080/api/petshuddle";
 
         JSONObject petJson = new JSONObject();
@@ -92,7 +94,6 @@ public class AddNewPetScreen extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 //update UI here
-
 //                Intent intent = new Intent(AddNewPetScreen.this, MainTabbedActivity.class);
 //                startActivity(intent);
 //                Log.i("added object is : ", response.toString());

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.portfolio.petshuddle.R;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ public class SinglePetScreen extends AppCompatActivity {
     private EditText editTextPetBreed;
     private EditText editTextPetAge;
     private EditText editTextPetDescription;
-    private EditText editTextPetUserId;
+//    private EditText editTextPetUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetBreed = findViewById(R.id.editTextPetBreed);
         editTextPetAge = findViewById(R.id.editTextPetAge);
         editTextPetDescription = findViewById(R.id.editTextPetDescription);
-        editTextPetUserId = findViewById(R.id.editTextPetUserId);
+//        editTextPetUserId = findViewById(R.id.editTextPetUserId);
 
         //setting edit texts to the appropriate passed values
         editTextPetId.setText(String.valueOf(petId));
@@ -63,12 +64,58 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetBreed.setText(breed);
         editTextPetAge.setText(String.valueOf(age));
         editTextPetDescription.setText(petDescription);
-        editTextPetUserId.setText(userId);
+//        editTextPetUserId.setText(userId);
     }
 
+    //handles the cancel button which sends the user back to the main tabbed view without making any changes
     public void handleCancelEditPet(View view) {
         this.finish();
     }
 
 
+    //method that handles the Edit button which enables edit features on the edittext fields
+    public void handleStartEditPressed(View view) {
+
+        editTextPetName.setClickable(true);
+        editTextPetName.setFocusable(true);
+        editTextPetName.setFocusableInTouchMode(true);
+        editTextPetName.setCursorVisible(true);
+
+        //requesting focus on the name EditText Field and opening the keyboard
+        editTextPetName.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editTextPetName, InputMethodManager.SHOW_IMPLICIT);
+
+        editTextPetSpecies.setClickable(true);
+        editTextPetSpecies.setFocusable(true);
+        editTextPetSpecies.setFocusableInTouchMode(true);
+        editTextPetSpecies.setCursorVisible(true);
+
+        editTextPetSex.setClickable(true);
+        editTextPetSex.setFocusable(true);
+        editTextPetSex.setFocusableInTouchMode(true);
+        editTextPetSex.setCursorVisible(true);
+
+        editTextPetBreed.setClickable(true);
+        editTextPetBreed.setFocusable(true);
+        editTextPetBreed.setFocusableInTouchMode(true);
+        editTextPetBreed.setCursorVisible(true);
+
+        editTextPetAge.setClickable(true);
+        editTextPetAge.setFocusable(true);
+        editTextPetAge.setFocusableInTouchMode(true);
+        editTextPetAge.setCursorVisible(true);
+
+        editTextPetDescription.setClickable(true);
+        editTextPetDescription.setFocusable(true);
+        editTextPetDescription.setFocusableInTouchMode(true);
+        editTextPetDescription.setCursorVisible(true);
+
+
+        //        public void makeitchange(View view) {
+//            changeThisEditText.setClickable(true);
+//            changeThisEditText.setFocusable(true);
+//            changeThisEditText.setFocusableInTouchMode(true);
+//            changeThisEditText.setCursorVisible(true);
+    }
 }
