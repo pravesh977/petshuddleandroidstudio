@@ -72,6 +72,37 @@ public class AddNewPetScreen extends AppCompatActivity {
 
         //Pet newPet = new Pet(0, petName, species, sex, breed, Integer.parseInt(age), description, currentUserId);
 
+        if(petName.isEmpty()) {
+            addTextPetName.setError("Name can't be empty");
+            addTextPetName.requestFocus();
+            return;
+        }
+        if(species.isEmpty()) {
+            addTextPetSpecies.setError("Species can't be empty");
+            addTextPetSpecies.requestFocus();
+            return;
+        }
+        if(sex.isEmpty()) {
+            addTextPetSex.setError("Sex can't be empty");
+            addTextPetSex.requestFocus();
+            return;
+        }
+        if(breed.isEmpty()) {
+            addTextPetBreed.setError("Breed can't be empty");
+            addTextPetBreed.requestFocus();
+            return;
+        }
+        if(age.isEmpty()) {
+            addTextPetAge.setError("Age can't be empty");
+            addTextPetAge.requestFocus();
+            return;
+        }
+        if(description.isEmpty()) {
+            addTextPetDescription.setError("Description can't be empty");
+            addTextPetDescription.requestFocus();
+            return;
+        }
+
         // Instantiate the RequestQueue.
         //RequestQueue queue = MySingletonRequestQueue.getInstance(this).getRequestQueue();
         String url ="http://10.0.2.2:8080/api/petshuddle";

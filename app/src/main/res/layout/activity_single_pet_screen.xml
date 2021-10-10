@@ -285,14 +285,15 @@
             />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/saveEditPetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Save"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            style="@style/MainButtons"/>
+            style="@style/MainButtons"
+            android:onClick="handleSavePetEdit"/>
     </LinearLayout>
 
 </LinearLayout>

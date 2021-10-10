@@ -37,6 +37,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +68,8 @@ public class MyPetsFragment extends Fragment {
     private Button addPetButton;
     private MyPetsAdapter myPetsAdapter;
     List<Pet> myPetsList = new ArrayList<>();
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -96,7 +100,8 @@ public class MyPetsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         //dont need this?
 
 //        List<Pet> myPetsList = new ArrayList<>();
@@ -200,14 +205,14 @@ public class MyPetsFragment extends Fragment {
         myPetsList.clear();
 //        List<Pet> myPetsList = new ArrayList<>();
 //        final MyPetsAdapter myPetsAdapter;
-        Log.i("activitystarted", "activity has started");
+//        Log.i("activitystarted", "activity has started");
 
 
         // Instantiate the RequestQueue.
         //RequestQueue queue = MySingletonRequestQueue.getInstance(this.getActivity()).getRequestQueue();
-        String url = "http://10.0.2.2:8080/api/petshuddle";
+        String url = "http://10.0.2.2:8080/api/petshuddle/userid/";
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + currentUser.getUid(), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 //                myPetsTextView.setText(response.toString());
@@ -239,7 +244,7 @@ public class MyPetsFragment extends Fragment {
                 myPetsAdapter = new MyPetsAdapter(myPetsList, getContext());
                 myPetsRecyclerView.setAdapter(myPetsAdapter);
                 myPetsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                Log.i("arraysize : ", String.valueOf(myPetsList.size()));
+//                Log.i("arraysize : ", String.valueOf(myPetsList.size()));
 
             }
         }, new Response.ErrorListener() {
@@ -286,8 +291,8 @@ public class MyPetsFragment extends Fragment {
 //                myPetsAdapter.notifyDataSetChanged();
                         //myPetsAdapter.notifyDataSetChanged();
                         //Log.i("swiped", "swiped for start");
-                        Log.i("arraysizeafterdelete : ", String.valueOf(myPetsList.size()));
-                        Log.i("arrayadaptersize", String.valueOf(myPetsAdapter.getItemCount()));
+//                        Log.i("arraysizeafterdelete : ", String.valueOf(myPetsList.size()));
+//                        Log.i("arrayadaptersize", String.valueOf(myPetsAdapter.getItemCount()));
                     }
                 });
                 aBuilder.setNegativeButton("Nope", new DialogInterface.OnClickListener() {
