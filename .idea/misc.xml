@@ -14,7 +14,8 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23505434782608695" />
         <entry key="app/src/main/res/layout/activity_main_tabbed.xml" value="0.23324275362318841" />
         <entry key="app/src/main/res/layout/activity_registration_screen.xml" value="0.232097030948169" />
-        <entry key="app/src/main/res/layout/activity_single_pet_screen.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_single_event_screen.xml" value="0.26096491228070173" />
+        <entry key="app/src/main/res/layout/activity_single_pet_screen.xml" value="0.26096491228070173" />
         <entry key="app/src/main/res/layout/activity_welcome_screen.xml" value="0.2269021739130435" />
         <entry key="app/src/main/res/layout/event_item.xml" value="0.2149122807017544" />
         <entry key="app/src/main/res/layout/fragment_event.xml" value="0.1618421052631579" />

@@ -1,8 +1,11 @@
 package android.portfolio.petshuddle.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.portfolio.petshuddle.Entity.Event;
 import android.portfolio.petshuddle.R;
+import android.portfolio.petshuddle.UI.SingleEventScreen;
+import android.portfolio.petshuddle.UI.SinglePetScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             eventTitleItem = itemView.findViewById(R.id.eventTitleItem);
             eventDateItem = itemView.findViewById(R.id.eventDateItem);
             eventLocationItem = itemView.findViewById(R.id.eventLocationItem);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    final Event currentEvent = eventList.get(position);
+                    Intent intent = new Intent(context, SingleEventScreen.class);
+                    intent.putExtra("eventId", currentEvent.getEventId());
+                    intent.putExtra("eventTitle", currentEvent.getEventTitle());
+                    intent.putExtra("eventDetails", currentEvent.getEventDetails());
+                    intent.putExtra("eventLocation", currentEvent.getEventLocation());
+                    intent.putExtra("eventDate", currentEvent.getEventDate());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
