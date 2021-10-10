@@ -28,9 +28,9 @@
         android:text="Add Pet"
         android:layout_gravity="bottom|right"
         android:textColor="@color/white"
-        style="@style/MainButtons"
-        android:backgroundTint="#30E85E5A"
         android:layout_marginBottom="10dp"
+        android:background="@drawable/roundedfullround"
+        app:backgroundTint="@null"
         />
 
 

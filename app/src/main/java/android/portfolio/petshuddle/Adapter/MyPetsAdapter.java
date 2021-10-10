@@ -17,6 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.ViewHolder>{
 
+    private List<Pet> myPetsList;
+    private Context context;
+
+    public MyPetsAdapter(List<Pet> pets, Context context) {
+        this.myPetsList = pets;
+        this.context = context;
+    }
+
     //viewholder that defines what the recyclerview holds. each viewholder will hold each item in the recyclerview
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView petNameList;
@@ -66,15 +74,6 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.ViewHolder
 ////                    Log.i("thisterm",String.valueOf(current.getTermId()));
 //        }
 //    });
-
-    private List<Pet> myPetsList;
-    private Context context;
-
-    public MyPetsAdapter(List<Pet> pets, Context context) {
-        this.myPetsList = pets;
-        this.context = context;
-    }
-
 
     @NonNull
     @Override
