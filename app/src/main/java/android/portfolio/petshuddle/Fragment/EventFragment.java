@@ -1,5 +1,6 @@
 package android.portfolio.petshuddle.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,17 +14,20 @@ import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
 import android.portfolio.petshuddle.Entity.Event;
 import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
+import android.portfolio.petshuddle.UI.AddNewEventScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.portfolio.petshuddle.R;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +46,9 @@ public class EventFragment extends Fragment {
     private RecyclerView eventsRecyclerView;
     private EventsAdapter eventsAdapter;
     private List<Event> eventList = new ArrayList<>();
+    private FloatingActionButton floatingActionButtonEvent;
+    private Button newEventScreenButton;
+    private Boolean isButtonVisible;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,6 +88,8 @@ public class EventFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        isButtonVisible = false;
     }
 
     @Override
@@ -94,6 +103,16 @@ public class EventFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         eventsRecyclerView = view.findViewById(R.id.eventsRecyclerView);
+        floatingActionButtonEvent = view.findViewById(R.id.floatingActionButtonEvent);
+        newEventScreenButton = view.findViewById(R.id.newEventScreenButton);
+        floatingActionButtonEvent.setOnClickListener(toggleAddEventDisplay);
+        newEventScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), AddNewEventScreen.class));
+            }
+        });
+
     }
 
     @Override
@@ -145,10 +164,30 @@ public class EventFragment extends Fragment {
 
     }
 
+    public View.OnClickListener toggleAddEventDisplay = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(isButtonVisible == false) {
+                newEventScreenButton.setVisibility(View.VISIBLE);
+//                Log.i("buttonvisibility", "button isi visible");
+                isButtonVisible = true;
+            }
+            else {
+                newEventScreenButton.setVisibility(View.GONE);
+//                Log.i("buttonvisibility", "now invisible");
+                isButtonVisible = false;
+            }
+
+        }
+    };
+
+    //removes the button if the user nagivates away from the screen while
+    //the button is visible
     @Override
-    public void onResume() {
-        super.onResume();
-//        Log.i("eventloaded", "event has been resumed");
-//        Toast.makeText(getContext(), "Event loaded", Toast.LENGTH_LONG).show();
+    public void onPause() {
+        super.onPause();
+        isButtonVisible = false;
+        newEventScreenButton.setVisibility(View.GONE);
     }
+
 }

@@ -3,8 +3,6 @@ package android.portfolio.petshuddle.Fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -36,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -64,12 +63,15 @@ public class MyPetsFragment extends Fragment {
     private String mParam2;
 
     //    private TextView myPetsTextView;
+    private Boolean isAddButtonVisible;
+    private FloatingActionButton floatingActionButtonPet;
     private RecyclerView myPetsRecyclerView;
     private Button addPetButton;
     private MyPetsAdapter myPetsAdapter;
     List<Pet> myPetsList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -102,75 +104,7 @@ public class MyPetsFragment extends Fragment {
         }
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        //dont need this?
-
-//        List<Pet> myPetsList = new ArrayList<>();
-//        Log.i("activitycreated", "this is being created again");
-//
-//        // Instantiate the RequestQueue.
-//        //RequestQueue queue = MySingletonRequestQueue.getInstance(this.getActivity()).getRequestQueue();
-//        String url ="http://10.0.2.2:8080/api/petshuddle";
-//
-//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-//            @Override
-//            public void onResponse(JSONArray response) {
-////                myPetsTextView.setText(response.toString());
-//
-//                //for loop works to get each name
-//                for(int i = 0; i < response.length(); i++) {
-//                    try {
-//                        JSONObject reqobject = response.getJSONObject(i);
-//                        int petId = reqobject.getInt("petId");
-//                        String petName = reqobject.getString("petName");
-//                        String species = reqobject.getString("species");
-//                        String sex = reqobject.getString("sex");
-//                        String breed = reqobject.getString("breed");
-//                        int age = reqobject.getInt("age");
-//                        String petDescription = reqobject.getString("petDescription");
-//                        String userId = reqobject.getString("userId");
-////                        Log.i("petName : ", petName);
-////                        Log.i("Description", petDescription);
-//                        Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
-//                        myPetsList.add(jsonPet);
-////                        Log.i("petname is: ", jsonPet.getPetName());
-////                        Log.i("pets list increment: ", String.valueOf(myPetsList.size()));
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                myPetsAdapter = new MyPetsAdapter(myPetsList, getContext());
-//                myPetsRecyclerView.setAdapter(myPetsAdapter);
-//                myPetsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-////                for(Pet element:myPetsList) {
-////                    Log.i("petobjectnameis :", element.getPetName());
-////                    Log.i("petobjectsexis :", element.getSex());
-////
-////                }
-////                Log.i("size of array is :", String.valueOf(myPetsList.size()));
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                error.printStackTrace();
-//            }
-//        });
-//
-//        MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
-
-//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                myPetsList.remove(viewHolder.getAdapterPosition());
-//                myPetsAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-//                Log.i("swiped", "swiped yo for create");
-//            }
-//        }).attachToRecyclerView(myPetsRecyclerView);
-
+        isAddButtonVisible = false;
     }
 
     @Override
@@ -186,6 +120,8 @@ public class MyPetsFragment extends Fragment {
         //myPetsTextView = view.findViewById(R.id.myPetsTextView);
 
         myPetsRecyclerView = view.findViewById(R.id.myPetsRecyclerView);
+        floatingActionButtonPet = view.findViewById(R.id.floatingActionButtonPet);
+        floatingActionButtonPet.setOnClickListener(toggleAddPetButton);
 
         addPetButton = view.findViewById(R.id.addPetButton);
         addPetButton.setOnClickListener(new View.OnClickListener() {
@@ -194,9 +130,11 @@ public class MyPetsFragment extends Fragment {
                 startActivity(new Intent(getActivity(), AddNewPetScreen.class));
             }
         });
+//        Transition transition = new Fade();
+//        transition.setDuration(600);
+//        transition.addTarget(R.id.addPetButton);
+//        TransitionManager.beginDelayedTransition(myPetsRecyclerView, transition);
 
-//        String petNamepassed = getActivity().getIntent().getStringExtra("petName");
-//        Log.i("passedpetis: ", "petNamepassed");
     }
 
     @Override
@@ -340,16 +278,28 @@ public class MyPetsFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Log.i("activityresumed", "activity is resumed");
-//    }
+    private View.OnClickListener toggleAddPetButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(isAddButtonVisible == false) {
+                addPetButton.setVisibility(View.VISIBLE);
+                isAddButtonVisible = true;
+            }
+            else {
+                addPetButton.setVisibility(View.GONE);
+                isAddButtonVisible = false;
+            }
+        }
+    };
 
-//    public void addNewPetToList(Pet passedNewPet) {
-//        myPetsList.add(passedNewPet);
-//        myPetsAdapter.notifyItemInserted(0);
-//    }
+    //removes the button if the user nagivates away from the screen while
+    //the button is visible
+    @Override
+    public void onPause() {
+        super.onPause();
+        isAddButtonVisible = false;
+        addPetButton.setVisibility(View.GONE);
+    }
 
     public void changeList() {
         myPetsAdapter.notifyDataSetChanged();

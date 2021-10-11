@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.AddNewEventScreen"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_weight="1"
+        android:id="@+id/petDetailsFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--        app:layout_constraintTop_toTopOf="parent"-->
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/naturalnight" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="20dp"
+                android:layout_gravity="center">
+
+                <EditText
+                    android:id="@+id/editTextEventTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Event Title"
+                    android:textAlignment="center"
+                    style="@style/PetsListStyle"
+                    />
+
+
+                <EditText
+                    android:id="@+id/editTextEventDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Details"
+                    android:textAlignment="center"
+                    style="@style/PetsListStyle"
+                    />
+
+                <EditText
+                    android:id="@+id/editTextEventLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Location"
+                    style="@style/PetsListStyle"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:id="@+id/textViewEventDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Date"
+                    style="@style/PetsListStyle"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:id="@+id/textViewEventTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Time"
+                    style="@style/PetsListStyle"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        >
+
+        <Button
+            android:id="@+id/cancelPetEditButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            style="@style/MainButtons"
+            android:backgroundTint="#E85E5A"
+            android:onClick="cancelEditEvent"/>
+
+        <Button
+            android:id="@+id/saveEditPetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            style="@style/MainButtons"
+            android:onClick="saveNewEvent"/>
+    </LinearLayout>
+
+</LinearLayout>

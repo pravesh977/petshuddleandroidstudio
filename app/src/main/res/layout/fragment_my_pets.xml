@@ -20,18 +20,44 @@
         android:id="@+id/myPetsRecyclerView" >
     </androidx.recyclerview.widget.RecyclerView>
 
-    <Button
-        android:drawableTop="@drawable/ic_greendoghouse"
-        android:id="@+id/addPetButton"
+<!--    <Button-->
+<!--        android:drawableTop="@drawable/ic_greendoghouse"-->
+<!--        android:id="@+id/addPetButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Add Pet"-->
+<!--        android:layout_gravity="bottom|right"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:background="@drawable/roundedfullround"-->
+<!--        app:backgroundTint="@null"-->
+<!--        />-->
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Pet"
         android:layout_gravity="bottom|right"
-        android:textColor="@color/white"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/roundedfullround"
-        app:backgroundTint="@null"
-        />
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/addPetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Pet"
+            style="@style/MainButtons"
+            android:visibility="invisible"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButtonPet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/addeventfab"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
 
 
 </FrameLayout>
