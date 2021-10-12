@@ -2,11 +2,36 @@ package android.portfolio.petshuddle.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
+import android.portfolio.petshuddle.Helper.StringToDateTimeConverter;
 import android.portfolio.petshuddle.R;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.timepicker.TimeFormat;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class SingleEventScreen extends AppCompatActivity {
 
@@ -14,7 +39,8 @@ public class SingleEventScreen extends AppCompatActivity {
     private TextView editTextEventTitle;
     private TextView editTextEventDetails;
     private TextView editTextEventLocation;
-    private TextView editTextEventDate;
+    private TextView tViewEventDate;
+    private TextView tViewEventTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,22 +49,77 @@ public class SingleEventScreen extends AppCompatActivity {
 
         int eventId = getIntent().getIntExtra("eventId", -1);
         String eventTitle = getIntent().getStringExtra("eventTitle");
-        String eventDetails = getIntent().getStringExtra("eventTitle");
+        String eventDetails = getIntent().getStringExtra("eventDetails");
         String eventLocation = getIntent().getStringExtra("eventLocation");
-        String eventDate = getIntent().getStringExtra("eventDate");
+        String eventDateTimeString = getIntent().getStringExtra("eventDateTime");
+//        Log.i("eventDateTimeString : ", eventDateTimeString);
 
         textViewEventId = findViewById(R.id.textViewEventId);
         editTextEventTitle = findViewById(R.id.editTextEventTitle);
         editTextEventDetails = findViewById(R.id.editTextEventDetails);
         editTextEventLocation = findViewById(R.id.editTextEventLocation);
-        editTextEventDate = findViewById(R.id.editTextEventDate);
+        tViewEventDate = findViewById(R.id.tViewEventDate);
+        tViewEventTime = findViewById(R.id.tViewEventTime);
+
+//        Calendar calendarDateTime = StringToDateTimeConverter.stringToCalendar(eventDateTime);
+//        Log.i("calendar object", calendarDateTime.getTime().toString());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        LocalDateTime localDateTime = LocalDateTime.parse(eventDateTimeString, formatter);
+//        Log.i("lcdtime: ", localDateTime.toString());
+        LocalDate localDateOnly = localDateTime.toLocalDate();
+        LocalTime localTimeOnly = localDateTime.toLocalTime();
+
+//        Log.i("ld is: ", localDateOnly.toString());
+        Log.i("lt is: ", localTimeOnly.toString());
 
         textViewEventId.setText(String.valueOf(eventId));
         editTextEventTitle.setText(eventTitle);
         editTextEventDetails.setText(eventDetails);
         editTextEventLocation.setText(eventLocation);
-        editTextEventDate.setText(eventDate);
+        //tViewEventDate.setText(calendarDateTime.getTime().toString());
+//        tViewEventTime.setText(calendarDateTime.get(Calendar.));
+        tViewEventDate.setText(localDateOnly.toString());
+        tViewEventTime.setText(localTimeOnly.toString() + ":00");
+
+        tViewEventDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDatePickerForEvent(localDateOnly);
+            }
+        });
+
+        tViewEventTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openTimePicker(localTimeOnly);
+            }
+        });
     }
+
+    public void openDatePickerForEvent(LocalDate givenLocalDate){
+
+        DatePickerDialog eventDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                SingleEventScreen.this.tViewEventDate.setText(year + "-" + (month + 1) + "-" + day);
+            }
+        }, givenLocalDate.getYear(), givenLocalDate.getMonthValue()-1, givenLocalDate.getDayOfMonth());
+        Log.i("thismonth", String.valueOf(givenLocalDate.getMonthValue()));
+        eventDateDialog.show();
+    }
+
+    public void openTimePicker(LocalTime givenTime) {
+
+        TimePickerDialog eventTimeDialog = new TimePickerDialog(SingleEventScreen.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                SingleEventScreen.this.tViewEventTime.setText(i + ":" + i1 + ":00");
+            }
+        }, givenTime.getHour(), givenTime.getMinute(), true);
+        eventTimeDialog.show();
+    };
 
     //handles the save button and saves the event to the database
     public void handleSaveEventEdit(View view) {
@@ -47,7 +128,9 @@ public class SingleEventScreen extends AppCompatActivity {
         String title = editTextEventTitle.getText().toString().trim();
         String details = editTextEventDetails.getText().toString().trim();
         String location = editTextEventLocation.getText().toString().trim();
-        String date = editTextEventDate.getText().toString().trim();
+        String date = tViewEventDate.getText().toString().trim();
+        String time = tViewEventTime.getText().toString().trim();
+        String dateTime = date + " " + time;
 
         if(title.isEmpty()) {
             editTextEventTitle.setError("Title can't be empty");
@@ -64,12 +147,54 @@ public class SingleEventScreen extends AppCompatActivity {
             editTextEventLocation.requestFocus();
             return;
         }
-        if(date.isEmpty()) {
-            editTextEventDate.setError("Date can't be empty");
-            editTextEventDate.requestFocus();
-            return;
+//        if(date.isEmpty()) {
+//            editTextEventDate.setError("Date can't be empty");
+//            editTextEventDate.requestFocus();
+//            return;
+//        }
+        // Instantiate the RequestQueue.
+        String url ="http://10.0.2.2:8080/api/events/";
+
+        JSONObject petJson = new JSONObject();
+        try {
+            petJson.put("eventTitle", title);
+            petJson.put("eventDetails", details);
+            petJson.put("eventLocation", location);
+            petJson.put("eventDate", dateTime);
+        } catch(JSONException ex) {
+            ex.printStackTrace();
         }
-        //
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url + eventId, petJson, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+//                Log.i("Updated object is : ", response.toString());
+//                finish();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Toast.makeText(SingleEventScreen.this, "Something went wrong: " + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        }){
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                int statusCode = response.statusCode;
+//                Log.i("statuscode", String.valueOf(statusCode));
+                if(statusCode == 200) {
+                    finish();
+                }
+                else {
+//                    Log.i("failedaddpet", "cant add this");
+                    Toast.makeText(SingleEventScreen.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+
+        MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
 
     //handles the edit button which enables edit features on the fields
@@ -95,10 +220,10 @@ public class SingleEventScreen extends AppCompatActivity {
         editTextEventLocation.setFocusableInTouchMode(true);
         editTextEventLocation.setCursorVisible(true);
 
-        editTextEventDate.setClickable(true);
-        editTextEventDate.setFocusable(true);
-        editTextEventDate.setFocusableInTouchMode(true);
-        editTextEventDate.setCursorVisible(true);
+//        editTextEventDate.setClickable(true);
+//        editTextEventDate.setFocusable(true);
+//        editTextEventDate.setFocusableInTouchMode(true);
+//        editTextEventDate.setCursorVisible(true);
     }
 
     //handles the cancel button and returns to main tabbed screen

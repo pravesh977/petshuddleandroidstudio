@@ -12,7 +12,7 @@ import java.util.Locale;
 public class StringToCalendarConverterClass {
     public static Calendar stringToCalendar(TextView givenDate){
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         int mMonth = 0;
         int mDay = 0;
         int mYear = 0;

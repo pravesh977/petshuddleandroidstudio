@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.portfolio.petshuddle.Entity.Event;
+import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.Helper.StringToCalendarConverterClass;
 import android.portfolio.petshuddle.R;
 import android.util.Log;
@@ -14,9 +15,18 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,55 +54,55 @@ public class AddNewEventScreen extends AppCompatActivity {
         textViewEventDate = findViewById(R.id.textViewEventDate);
         textViewEventTime = findViewById(R.id.textViewEventTime);
 
-//        textViewEventDate.setOnClickListener(openDatePicker);
+        textViewEventDate.setOnClickListener(openDatePicker);
         textViewEventTime.setOnClickListener(openTimePicker);
 
-        textViewEventDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar eventCalendar = StringToCalendarConverterClass.stringToCalendar(textViewEventDate);
-                openDatePickerForParty(eventCalendar);
-            }
-        });
+//        textViewEventDate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Calendar eventCalendar = StringToCalendarConverterClass.stringToCalendar(textViewEventDate);
+//                openDatePickerForParty(eventCalendar);
+//            }
+//        });
     }
 
-//    public View.OnClickListener openDatePicker = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
-//            String todaysDate = LocalDate.now().toString();
-//            Log.i("todays date", todaysDate);
-//
-//            LocalDate localDate = LocalDate.parse(todaysDate, formatter);
-//            openDatePickerForParty(localDate);
-//        }
-//    };
+    public View.OnClickListener openDatePicker = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+            String todaysDate = LocalDate.now().toString();
+            Log.i("todays date", todaysDate);
 
-//    public void openDatePickerForParty(LocalDate givenLocalDT){
-//
-//        DatePickerDialog eventDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-//
-//            @Override
-//            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-//                AddNewEventScreen.this.textViewEventDate.setText(year + "-"+ (month) + "-" + day);
-//            }
-//        }, givenLocalDT.getYear(), givenLocalDT.getMonthValue(), givenLocalDT.getDayOfMonth());
-//        Log.i("thismonth", String.valueOf(givenLocalDT.getMonthValue()));
-//        eventDateDialog.show();
-//    }
+            LocalDate localDate = LocalDate.parse(todaysDate, formatter);
+            openDatePickerForEvent(localDate);
+        }
+    };
 
-    public void openDatePickerForParty(Calendar givenCalendar){
+    public void openDatePickerForEvent(LocalDate givenLocalDate){
 
         DatePickerDialog eventDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                AddNewEventScreen.this.textViewEventDate.setText(year + "-" + (month + 1) + "-" + day);
+                AddNewEventScreen.this.textViewEventDate.setText(year + "-"+ (month+1) + "-" + day);
             }
-        }, givenCalendar.get(Calendar.YEAR), givenCalendar.get(Calendar.MONTH), givenCalendar.get(Calendar.DAY_OF_MONTH));
-        Log.i("thismonth", String.valueOf(givenCalendar.get(Calendar.MONTH)));
+        }, givenLocalDate.getYear(), givenLocalDate.getMonthValue()-1, givenLocalDate.getDayOfMonth());
+        Log.i("thismonth", String.valueOf(givenLocalDate.getMonthValue()));
         eventDateDialog.show();
     }
+
+//    public void openDatePickerForParty(Calendar givenCalendar){
+//
+//        DatePickerDialog eventDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+//
+//            @Override
+//            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+//                AddNewEventScreen.this.textViewEventDate.setText(year + "-" + (month + 1) + "-" + day);
+//            }
+//        }, givenCalendar.get(Calendar.YEAR), givenCalendar.get(Calendar.MONTH), givenCalendar.get(Calendar.DAY_OF_MONTH));
+//        Log.i("thismonth", String.valueOf(givenCalendar.get(Calendar.MONTH)));
+//        eventDateDialog.show();
+//    }
 
     public View.OnClickListener openTimePicker = new View.OnClickListener() {
 
@@ -121,14 +131,81 @@ public class AddNewEventScreen extends AppCompatActivity {
         String time = textViewEventTime.getText().toString().trim();
         String dateTime = date + " " + time;
 
-        Event newEvent = new Event(12, title, details, location, dateTime);
-        Log.i("eventcreated", newEvent.getEventDate());
-        Log.i("eventcre", newEvent.getEventDetails());
+//        Event newEvent = new Event(12, title, details, location, dateTime);
+//        Log.i("eventcreated", newEvent.getEventDate());
+//        Log.i("eventcre", newEvent.getEventDetails());
+
+        if(title.isEmpty()) {
+            editTextEventTitle.setError("Title can't be empty");
+            editTextEventTitle.requestFocus();
+            return;
+        }
+        if(details.isEmpty()) {
+            editTextEventDetails.setError("Details can't be empty");
+            editTextEventDetails.requestFocus();
+            return;
+        }
+        if(location.isEmpty()) {
+            editTextEventLocation.setError("Location can't be empty");
+            editTextEventLocation.requestFocus();
+            return;
+        }
+        if(date.isEmpty()) {
+            textViewEventDate.setError("Please check date");
+            textViewEventDate.requestFocus();
+            return;
+        }
+        if(time.isEmpty()) {
+            textViewEventTime.setError("Please check time");
+            textViewEventTime.requestFocus();
+            return;
+        }
+
+        String url ="http://10.0.2.2:8080/api/events";
+
+        JSONObject eventJson = new JSONObject();
+        try {
+            eventJson.put("eventTitle", title);
+            eventJson.put("eventDetails", details);
+            eventJson.put("eventLocation", location);
+            eventJson.put("eventDate", dateTime);
+        } catch(JSONException ex) {
+            ex.printStackTrace();
+        }
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, eventJson, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                int statusCode = response.statusCode;
+//                Log.i("codeis", String.valueOf(statusCode));
+                if(statusCode == 201) {
+                    finish();
+                }
+                else {
+                    Toast.makeText(AddNewEventScreen.this, "Adding failed: ", Toast.LENGTH_LONG).show();
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+
+        MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
 
 
     //returns users to the previous tab view
     public void cancelEditEvent(View view) {
+        this.finish();
     }
 
 }

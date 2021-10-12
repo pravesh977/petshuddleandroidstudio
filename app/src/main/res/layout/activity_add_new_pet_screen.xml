@@ -50,13 +50,21 @@
                     android:hint="Species"
                     android:textAlignment="center"/>
 
-                <EditText
-                    android:id="@+id/addTextPetSex"
-                    style="@style/PetsListStyle"
+<!--                <EditText-->
+<!--                    android:id="@+id/addTextPetSex"-->
+<!--                    style="@style/PetsListStyle"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Sex"-->
+<!--                    android:textAlignment="center"/>-->
+
+                <Spinner
+                    android:id="@+id/petGenderSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Sex"
-                    android:textAlignment="center"/>
+                    android:layout_marginTop="10dp"
+                    />
+
 
                 <EditText
                     android:id="@+id/addTextPetBreed"
@@ -64,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Breed"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
 
                 <EditText
                     android:id="@+id/addTextPetAge"

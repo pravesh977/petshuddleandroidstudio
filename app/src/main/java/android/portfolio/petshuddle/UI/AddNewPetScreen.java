@@ -12,9 +12,13 @@ import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.R;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,16 +33,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class AddNewPetScreen extends AppCompatActivity {
 
     private EditText addTextPetName;
     private EditText addTextPetSpecies;
-    private EditText addTextPetSex;
     private EditText addTextPetBreed;
     private EditText addTextPetAge;
     private EditText addTextPetDescription;
     private FirebaseAuth mAuth;
     private String currentUserId;
+    private Spinner petGenderSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +53,22 @@ public class AddNewPetScreen extends AppCompatActivity {
 
         addTextPetName = findViewById(R.id.addTextPetName);
         addTextPetSpecies = findViewById(R.id.addTextPetSpecies);
-        addTextPetSex = findViewById(R.id.addTextPetSex);
         addTextPetBreed = findViewById(R.id.addTextPetBreed);
         addTextPetAge = findViewById(R.id.addTextPetAge);
         addTextPetDescription = findViewById(R.id.addTextPetDescription);
+        petGenderSpinner = findViewById(R.id.petGenderSpinner);
+
+        String petGenders[] = {"Male", "Female"};
+//        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, petGenders);
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, petGenders);
+
+        petGenderSpinner.setAdapter(genderAdapter);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         currentUserId = currentUser.getUid();
+//        Log.i("startedscreen", "started this screen");
+//        petGenderArrayList.
     }
 
     public void handleCancelAddPet(View view) {
@@ -65,7 +79,7 @@ public class AddNewPetScreen extends AppCompatActivity {
 
         String petName = addTextPetName.getText().toString().trim();
         String species = addTextPetSpecies.getText().toString().trim();
-        String sex = addTextPetSex.getText().toString().trim();
+        String sex = petGenderSpinner.getSelectedItem().toString().trim();
         String breed = addTextPetBreed.getText().toString().trim();
         String age = addTextPetAge.getText().toString().trim();
         String description = addTextPetDescription.getText().toString().trim();
@@ -82,11 +96,11 @@ public class AddNewPetScreen extends AppCompatActivity {
             addTextPetSpecies.requestFocus();
             return;
         }
-        if(sex.isEmpty()) {
-            addTextPetSex.setError("Sex can't be empty");
-            addTextPetSex.requestFocus();
-            return;
-        }
+//        if(sex.isEmpty()) {
+//            petGenderSpinner.setError("Sex can't be empty");
+//            petGenderSpinner.requestFocus();
+//            return;
+//        }
         if(breed.isEmpty()) {
             addTextPetBreed.setError("Breed can't be empty");
             addTextPetBreed.requestFocus();
@@ -130,14 +144,30 @@ public class AddNewPetScreen extends AppCompatActivity {
 //                Log.i("added object is : ", response.toString());
 //                MyPetsFragment petsFragment = new MyPetsFragment();
 //                petsFragment.changeList();
-                finish();
+//                finish();
+//                if(status)
                 }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(AddNewPetScreen.this, "Something went wrong: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
-        });
+        }){
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                int statusCode = response.statusCode;
+                Log.i("statuscode", String.valueOf(statusCode));
+                if(statusCode == 201) {
+                    finish();
+                }
+                else {
+                    Log.i("failedaddpet", "cant add this");
+                    Toast.makeText(AddNewPetScreen.this, "Adding failed: ", Toast.LENGTH_LONG).show();
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }

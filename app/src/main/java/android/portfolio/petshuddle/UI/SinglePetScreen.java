@@ -8,7 +8,9 @@ import android.portfolio.petshuddle.R;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -24,11 +26,12 @@ public class SinglePetScreen extends AppCompatActivity {
     private TextView editTextPetId;
     private EditText editTextPetName;
     private EditText editTextPetSpecies;
-    private EditText editTextPetSex;
+//    private EditText editTextPetSex;
     private EditText editTextPetBreed;
     private EditText editTextPetAge;
     private EditText editTextPetDescription;
     private String petUserId;
+    private Spinner editGenderSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,17 +53,24 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetId = findViewById(R.id.editTextPetId);
         editTextPetName = findViewById(R.id.editTextPetName);
         editTextPetSpecies = findViewById(R.id.editTextPetSpecies);
-        editTextPetSex = findViewById(R.id.editTextPetSex);
+//        editTextPetSex = findViewById(R.id.editTextPetSex);
         editTextPetBreed = findViewById(R.id.editTextPetBreed);
         editTextPetAge = findViewById(R.id.editTextPetAge);
         editTextPetDescription = findViewById(R.id.editTextPetDescription);
+        editGenderSpinner = findViewById(R.id.editGenderSpinner);
 //        editTextPetUserId = findViewById(R.id.editTextPetUserId);
+
+        String petGenders[] = {"Male", "Female"};
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, petGenders);
+        editGenderSpinner.setAdapter(genderAdapter);
 
         //setting edit texts to the appropriate passed values
         editTextPetId.setText(String.valueOf(petId));
         editTextPetName.setText(petName);
         editTextPetSpecies.setText(species);
-        editTextPetSex.setText(sex);
+//        editTextPetSex.setText(sex);
+        int genderValue = genderAdapter.getPosition(sex);
+        editGenderSpinner.setSelection(genderValue);
         editTextPetBreed.setText(breed);
         editTextPetAge.setText(String.valueOf(age));
         editTextPetDescription.setText(petDescription);
@@ -91,10 +101,9 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetSpecies.setFocusableInTouchMode(true);
         editTextPetSpecies.setCursorVisible(true);
 
-        editTextPetSex.setClickable(true);
-        editTextPetSex.setFocusable(true);
-        editTextPetSex.setFocusableInTouchMode(true);
-        editTextPetSex.setCursorVisible(true);
+        editGenderSpinner.setClickable(true);
+        editGenderSpinner.setFocusable(true);
+        editGenderSpinner.setFocusableInTouchMode(true);
 
         editTextPetBreed.setClickable(true);
         editTextPetBreed.setFocusable(true);
@@ -118,7 +127,7 @@ public class SinglePetScreen extends AppCompatActivity {
         int petId = Integer.parseInt(editTextPetId.getText().toString());
         String name = editTextPetName.getText().toString().trim();
         String species = editTextPetSpecies.getText().toString().trim();
-        String sex = editTextPetSex.getText().toString().trim();
+        String sex = editGenderSpinner.getSelectedItem().toString().trim();
         String breed = editTextPetBreed.getText().toString().trim();
         String age = editTextPetAge.getText().toString().trim();
         String description = editTextPetDescription.getText().toString().trim();
@@ -134,11 +143,11 @@ public class SinglePetScreen extends AppCompatActivity {
             editTextPetSpecies.requestFocus();
             return;
         }
-        if(sex.isEmpty()) {
-            editTextPetSex.setError("Sex can't be empty");
-            editTextPetSex.requestFocus();
-            return;
-        }
+//        if(sex.isEmpty()) {
+//            editTextPetSex.setError("Sex can't be empty");
+//            editTextPetSex.requestFocus();
+//            return;
+//        }
         if(breed.isEmpty()) {
             editTextPetBreed.setError("Breed can't be empty");
             editTextPetBreed.requestFocus();

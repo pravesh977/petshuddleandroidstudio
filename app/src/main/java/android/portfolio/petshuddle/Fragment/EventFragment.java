@@ -1,11 +1,14 @@
 package android.portfolio.petshuddle.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +18,7 @@ import android.portfolio.petshuddle.Entity.Event;
 import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.UI.AddNewEventScreen;
+import android.portfolio.petshuddle.UI.SingleEventScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,18 +27,27 @@ import android.portfolio.petshuddle.R;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,7 +101,7 @@ public class EventFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        Log.i("fragcrae", "created fragment");
         isButtonVisible = false;
     }
 
@@ -113,6 +126,58 @@ public class EventFragment extends Fragment {
             }
         });
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+//            @Override
+//            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//                View itemView = viewHolder.itemView;
+//                itemView.setBackgroundColor(Color.parseColor("#0B059E"));
+//            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//                Log.i("moved", "it is moving");
+                return true;
+            }
+
+            //setting swipe functions on the recyclerview
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                //implement alert and delete from database
+                AlertDialog.Builder aBuilder = new AlertDialog.Builder(getActivity());
+                aBuilder.setTitle("Delete this Event?");
+                aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int position = viewHolder.getAdapterPosition();
+                        Event currentEvent = eventList.get(position);
+                        handleDeleteEvent(currentEvent.getEventId());
+                        eventList.remove(currentEvent);
+                        eventsAdapter.notifyItemRemoved(position);
+                        Snackbar.make(eventsRecyclerView,"Deleted Event " + currentEvent.getEventTitle(), Snackbar.LENGTH_LONG).show();
+                    }
+                });
+                aBuilder.setNegativeButton("Nope", new DialogInterface.OnClickListener() {
+                    //notifies the adapter of the item change which somehow puts the item back if no is clicked
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int position = viewHolder.getAdapterPosition();
+                        eventsAdapter.notifyItemChanged(position);
+                    }
+                });
+                aBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        int position = viewHolder.getAdapterPosition();
+                        eventsAdapter.notifyItemChanged(position);
+                    }
+                });
+                AlertDialog deleteDialog = aBuilder.create();
+                //deleteDialog.setCanceledOnTouchOutside(false);
+                deleteDialog.show();
+            }
+        }).attachToRecyclerView(eventsRecyclerView);
     }
 
     @Override
@@ -138,9 +203,6 @@ public class EventFragment extends Fragment {
 
                         Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate);
                         eventList.add(responseEvent);
-//                        Log.i("petname is: ", jsonPet.getPetName());
-//                        Log.i("pets list increment: ", String.valueOf(myPetsList.size()));
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -149,7 +211,6 @@ public class EventFragment extends Fragment {
                 eventsAdapter = new EventsAdapter(eventList, getContext());
                 eventsRecyclerView.setAdapter(eventsAdapter);
                 eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//                Log.i("arraysize : ", String.valueOf(myPetsList.size()));
 
             }
         }, new Response.ErrorListener() {
@@ -158,6 +219,53 @@ public class EventFragment extends Fragment {
                 error.printStackTrace();
             }
         });
+
+        MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
+
+    }
+
+    public void handleDeleteEvent(int deleteEventId) {
+
+        String url = "http://10.0.2.2:8080/api/events/";
+
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url + deleteEventId, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                error.printStackTrace();
+//            }
+//        })
+        //this is a string request because api sends a string only instead of a jsonobject or jsonarray
+        StringRequest request = new StringRequest(Request.Method.DELETE, url + deleteEventId, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                Log.i("deletedis ", response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+//            @Override
+//            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+//                int statusCode = response.statusCode;
+////                Log.i("statuscode", String.valueOf(statusCode));
+//                if(statusCode == 200) {
+//                    Log.i("deletedevent", "event delete successful");
+//                }
+//                else {
+//                    Log.i("failedaddpet", response.toString());
+//                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
+//                }
+//                return super.parseNetworkResponse(response);
+//            }
+        };
+
 
         MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
 

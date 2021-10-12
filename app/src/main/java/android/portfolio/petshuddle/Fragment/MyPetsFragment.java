@@ -275,7 +275,6 @@ public class MyPetsFragment extends Fragment {
 
         MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
 
-
     }
 
     private View.OnClickListener toggleAddPetButton = new View.OnClickListener() {
