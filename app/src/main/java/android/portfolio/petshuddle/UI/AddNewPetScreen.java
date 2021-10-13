@@ -38,13 +38,14 @@ import java.util.ArrayList;
 public class AddNewPetScreen extends AppCompatActivity {
 
     private EditText addTextPetName;
-    private EditText addTextPetSpecies;
+//    private EditText addTextPetSpecies;
     private EditText addTextPetBreed;
     private EditText addTextPetAge;
     private EditText addTextPetDescription;
     private FirebaseAuth mAuth;
     private String currentUserId;
     private Spinner petGenderSpinner;
+    private Spinner petAddSpeciesSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +53,26 @@ public class AddNewPetScreen extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_pet_screen);
 
         addTextPetName = findViewById(R.id.addTextPetName);
-        addTextPetSpecies = findViewById(R.id.addTextPetSpecies);
+//        addTextPetSpecies = findViewById(R.id.addTextPetSpecies);
         addTextPetBreed = findViewById(R.id.addTextPetBreed);
         addTextPetAge = findViewById(R.id.addTextPetAge);
         addTextPetDescription = findViewById(R.id.addTextPetDescription);
         petGenderSpinner = findViewById(R.id.petGenderSpinner);
+        petAddSpeciesSpinner = findViewById(R.id.petAddSpeciesSpinner);
 
         String petGenders[] = {"Male", "Female"};
 //        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, petGenders);
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, petGenders);
-
         petGenderSpinner.setAdapter(genderAdapter);
+
+        String petSpecies[] = {"Cat", "Dog", "Hamster", "Bird", "Rabbit", "Horse", "Turtle", "Fish", "Reptile", "Other"};
+        ArrayAdapter<String> speciesAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, petSpecies);
+        petAddSpeciesSpinner.setAdapter(speciesAdapter);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         currentUserId = currentUser.getUid();
 //        Log.i("startedscreen", "started this screen");
-//        petGenderArrayList.
     }
 
     public void handleCancelAddPet(View view) {
@@ -78,7 +82,7 @@ public class AddNewPetScreen extends AppCompatActivity {
     public void handleNewPetAdd(View view) {
 
         String petName = addTextPetName.getText().toString().trim();
-        String species = addTextPetSpecies.getText().toString().trim();
+        String species = petAddSpeciesSpinner.getSelectedItem().toString().trim();
         String sex = petGenderSpinner.getSelectedItem().toString().trim();
         String breed = addTextPetBreed.getText().toString().trim();
         String age = addTextPetAge.getText().toString().trim();
@@ -91,11 +95,11 @@ public class AddNewPetScreen extends AppCompatActivity {
             addTextPetName.requestFocus();
             return;
         }
-        if(species.isEmpty()) {
-            addTextPetSpecies.setError("Species can't be empty");
-            addTextPetSpecies.requestFocus();
-            return;
-        }
+//        if(species.isEmpty()) {
+//            petGenderSpinner.setError("Species can't be empty");
+//            petGenderSpinner.requestFocus();
+//            return;
+//        }
 //        if(sex.isEmpty()) {
 //            petGenderSpinner.setError("Sex can't be empty");
 //            petGenderSpinner.requestFocus();

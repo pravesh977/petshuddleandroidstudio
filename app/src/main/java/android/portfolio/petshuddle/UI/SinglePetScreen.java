@@ -25,13 +25,14 @@ public class SinglePetScreen extends AppCompatActivity {
 
     private TextView editTextPetId;
     private EditText editTextPetName;
-    private EditText editTextPetSpecies;
+//    private EditText editTextPetSpecies;
 //    private EditText editTextPetSex;
     private EditText editTextPetBreed;
     private EditText editTextPetAge;
     private EditText editTextPetDescription;
     private String petUserId;
     private Spinner editGenderSpinner;
+    private Spinner editSpeciesSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +50,11 @@ public class SinglePetScreen extends AppCompatActivity {
         String petDescription = getIntent().getStringExtra("description");
         petUserId = getIntent().getStringExtra("userId");
 
-
         editTextPetId = findViewById(R.id.editTextPetId);
         editTextPetName = findViewById(R.id.editTextPetName);
-        editTextPetSpecies = findViewById(R.id.editTextPetSpecies);
+//        editTextPetSpecies = findViewById(R.id.editTextPetSpecies);
 //        editTextPetSex = findViewById(R.id.editTextPetSex);
+        editSpeciesSpinner = findViewById(R.id.editSpeciesSpinner);
         editTextPetBreed = findViewById(R.id.editTextPetBreed);
         editTextPetAge = findViewById(R.id.editTextPetAge);
         editTextPetDescription = findViewById(R.id.editTextPetDescription);
@@ -64,15 +65,21 @@ public class SinglePetScreen extends AppCompatActivity {
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, petGenders);
         editGenderSpinner.setAdapter(genderAdapter);
 
+        String petSpecies[] = {"Cat", "Dog", "Hamster", "Bird", "Rabbit", "Horse", "Turtle", "Fish", "Reptile", "Other"};
+        ArrayAdapter<String> speciesAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, petSpecies);
+        editSpeciesSpinner.setAdapter(speciesAdapter);
+
         //setting edit texts to the appropriate passed values
         editTextPetId.setText(String.valueOf(petId));
         editTextPetName.setText(petName);
-        editTextPetSpecies.setText(species);
-//        editTextPetSex.setText(sex);
         int genderValue = genderAdapter.getPosition(sex);
         editGenderSpinner.setSelection(genderValue);
-        editTextPetBreed.setText(breed);
+//        editTextPetSpecies.setText(species);
+//        editTextPetSex.setText(sex);
         editTextPetAge.setText(String.valueOf(age));
+        int speciesValue = speciesAdapter.getPosition(species);
+        editSpeciesSpinner.setSelection(speciesValue);
+        editTextPetBreed.setText(breed);
         editTextPetDescription.setText(petDescription);
 //        editTextPetUserId.setText(userId);
     }
@@ -96,10 +103,9 @@ public class SinglePetScreen extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editTextPetName, InputMethodManager.SHOW_IMPLICIT);
 
-        editTextPetSpecies.setClickable(true);
-        editTextPetSpecies.setFocusable(true);
-        editTextPetSpecies.setFocusableInTouchMode(true);
-        editTextPetSpecies.setCursorVisible(true);
+        editSpeciesSpinner.setClickable(true);
+        editSpeciesSpinner.setFocusable(true);
+        editSpeciesSpinner.setFocusableInTouchMode(true);
 
         editGenderSpinner.setClickable(true);
         editGenderSpinner.setFocusable(true);
@@ -126,7 +132,7 @@ public class SinglePetScreen extends AppCompatActivity {
 
         int petId = Integer.parseInt(editTextPetId.getText().toString());
         String name = editTextPetName.getText().toString().trim();
-        String species = editTextPetSpecies.getText().toString().trim();
+        String species = editSpeciesSpinner.getSelectedItem().toString().trim();
         String sex = editGenderSpinner.getSelectedItem().toString().trim();
         String breed = editTextPetBreed.getText().toString().trim();
         String age = editTextPetAge.getText().toString().trim();
@@ -138,11 +144,11 @@ public class SinglePetScreen extends AppCompatActivity {
             editTextPetName.requestFocus();
             return;
         }
-        if(species.isEmpty()) {
-            editTextPetSpecies.setError("Species can't be empty");
-            editTextPetSpecies.requestFocus();
-            return;
-        }
+//        if(species.isEmpty()) {
+//            editTextPetSpecies.setError("Species can't be empty");
+//            editTextPetSpecies.requestFocus();
+//            return;
+//        }
 //        if(sex.isEmpty()) {
 //            editTextPetSex.setError("Sex can't be empty");
 //            editTextPetSex.requestFocus();
