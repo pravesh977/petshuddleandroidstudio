@@ -1,15 +1,22 @@
 package android.portfolio.petshuddle.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.portfolio.petshuddle.Adapter.EventsAdapter;
+import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
+import android.portfolio.petshuddle.Entity.Event;
+import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.Helper.StringToDateTimeConverter;
 import android.portfolio.petshuddle.R;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -20,9 +27,11 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.timepicker.TimeFormat;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +39,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class SingleEventScreen extends AppCompatActivity {
@@ -41,6 +52,9 @@ public class SingleEventScreen extends AppCompatActivity {
     private TextView editTextEventLocation;
     private TextView tViewEventDate;
     private TextView tViewEventTime;
+    private RecyclerView petsForEventsRecyclerView;
+    private MyPetsAdapter myPetsForEventAdapter;
+    List<Pet> petsListForEvent = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +74,7 @@ public class SingleEventScreen extends AppCompatActivity {
         editTextEventLocation = findViewById(R.id.editTextEventLocation);
         tViewEventDate = findViewById(R.id.tViewEventDate);
         tViewEventTime = findViewById(R.id.tViewEventTime);
+        petsForEventsRecyclerView = findViewById(R.id.petsForEventsRecyclerView);
 
 //        Calendar calendarDateTime = StringToDateTimeConverter.stringToCalendar(eventDateTime);
 //        Log.i("calendar object", calendarDateTime.getTime().toString());
@@ -95,6 +110,69 @@ public class SingleEventScreen extends AppCompatActivity {
                 openTimePicker(localTimeOnly);
             }
         });
+
+        //setting up the horizontal recyclerview containing the pets for the event
+        petsListForEvent.clear();
+        Log.i("started"," app started");
+        String url = "http://10.0.2.2:8080/api/events/";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + eventId, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    JSONArray petJsonArray = response.getJSONArray("petsListForEvent");
+//                        Log.i("jsonsizeis : ", String.valueOf(petJsonArray.length()));
+                    for(int i = 0; i < petJsonArray.length(); i++){
+                        JSONObject reqobject = petJsonArray.getJSONObject(i);
+                        int petId = reqobject.getInt("petId");
+                        String petName = reqobject.getString("petName");
+                        String species = reqobject.getString("species");
+                        String sex = reqobject.getString("sex");
+                        String breed = reqobject.getString("breed");
+                        int age = reqobject.getInt("age");
+                        String petDescription = reqobject.getString("petDescription");
+                        String userId = reqobject.getString("userId");
+                        Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
+                        petsListForEvent.add(jsonPet);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                myPetsForEventAdapter = new MyPetsAdapter(petsListForEvent,SingleEventScreen.this);
+                petsForEventsRecyclerView.setAdapter(myPetsForEventAdapter);
+//                petsForEventsRecyclerView.setLayoutManager(new LinearLayoutManager(SingleEventScreen.this));
+                //this layout manager sets the view horizontally
+
+//                LinearLayoutManager layoutManager = new LinearLayoutManager(SingleEventScreen.this, LinearLayoutManager.HORIZONTAL, false) {
+//                    @Override
+//                    public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+//                        lp.width = getWidth() / 2;
+////                        return super.checkLayoutParams(lp);
+//                        return true;
+//                    }
+//                };
+//                petsForEventsRecyclerView.setLayoutManager(layoutManager);
+
+                //same as above function. this changes the child/viewholder's width to half of the xml file's width
+                petsForEventsRecyclerView.setLayoutManager(new LinearLayoutManager(SingleEventScreen.this, LinearLayoutManager.HORIZONTAL, false) {
+                    @Override
+                    public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+                        lp.width = getWidth() / 2;
+//                        return super.checkLayoutParams(lp);
+                        return true;
+                    }
+                });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
+
     }
 
     public void openDatePickerForEvent(LocalDate givenLocalDate){
@@ -224,6 +302,11 @@ public class SingleEventScreen extends AppCompatActivity {
 //        editTextEventDate.setFocusable(true);
 //        editTextEventDate.setFocusableInTouchMode(true);
 //        editTextEventDate.setCursorVisible(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     //handles the cancel button and returns to main tabbed screen

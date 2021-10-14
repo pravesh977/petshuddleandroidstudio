@@ -200,7 +200,8 @@ public class EventFragment extends Fragment {
                         String eventDetails = reqobject.getString("eventDetails");
                         String eventLocation = reqobject.getString("eventLocation");
                         String eventDate = reqobject.getString("eventDate");
-
+                        JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
+//                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
                         Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate);
                         eventList.add(responseEvent);
 
@@ -211,7 +212,6 @@ public class EventFragment extends Fragment {
                 eventsAdapter = new EventsAdapter(eventList, getContext());
                 eventsRecyclerView.setAdapter(eventsAdapter);
                 eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
             }
         }, new Response.ErrorListener() {
             @Override

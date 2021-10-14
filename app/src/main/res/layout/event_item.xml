@@ -17,11 +17,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/eventDateItem"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Event Date"
@@ -30,11 +30,33 @@
 
         <TextView
             android:id="@+id/eventLocationItem"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Event Location"
             android:textAlignment="center"
             style="@style/PetsListStyle"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Attendees"
+                android:textAlignment="center"
+                style="@style/PetsListStyle"/>
+            <TextView
+                android:id="@+id/eventAttendeesItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Attendees"
+                android:textAlignment="center"
+                style="@style/PetsListStyle"/>
+        </LinearLayout>
+
+
     </LinearLayout>
 </LinearLayout>
