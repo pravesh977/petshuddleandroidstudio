@@ -7,6 +7,7 @@
     tools:context=".UI.SingleEventScreen"
     android:orientation="vertical">
 
+
     <FrameLayout
         android:layout_weight="1"
         android:id="@+id/petDetailsFrameLayout"
@@ -106,17 +107,46 @@
                     style="@style/PetsListStyle"
                     android:textAlignment="center"/>
             </LinearLayout>
-        </ScrollView>
 
+
+
+    </ScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/petsForEventsRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_gravity="bottom|center"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionJoinEvent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/addeventfab"
+                android:layout_gravity="right"/>
+
+            <Button
+                android:id="@+id/joinEventButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Join Event"
+                style="@style/MainButtons"
+                android:visibility="invisible"
+                />
+
+        </LinearLayout>
     </FrameLayout>
 
-    <!--                insert horizontal recyclerview here-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/petsForEventsRecyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

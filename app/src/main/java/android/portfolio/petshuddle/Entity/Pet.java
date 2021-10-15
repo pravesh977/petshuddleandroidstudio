@@ -85,5 +85,10 @@ public class Pet {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return petName;
+    }
 }
 
