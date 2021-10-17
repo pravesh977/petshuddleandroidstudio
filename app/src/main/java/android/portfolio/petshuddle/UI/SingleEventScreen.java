@@ -4,14 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.portfolio.petshuddle.Adapter.EventsAdapter;
 import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
 import android.portfolio.petshuddle.Entity.Event;
 import android.portfolio.petshuddle.Entity.Pet;
+import android.portfolio.petshuddle.Helper.MyEventNotificationReceiver;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.Helper.StringToDateTimeConverter;
 import android.portfolio.petshuddle.R;
@@ -43,9 +48,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,6 +73,8 @@ public class SingleEventScreen extends AppCompatActivity {
     private MyPetsAdapter myPetsForEventAdapter;
     List<Pet> petsListForEvent = new ArrayList<>();
     private Button joinEventButton;
+    private Button shareEventButton;
+    private Button notifyEventButton;
     private FloatingActionButton floatingActionJoinEvent;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -90,6 +100,8 @@ public class SingleEventScreen extends AppCompatActivity {
         tViewEventTime = findViewById(R.id.tViewEventTime);
         petsForEventsRecyclerView = findViewById(R.id.petsForEventsRecyclerView);
         joinEventButton = findViewById(R.id.joinEventButton);
+        shareEventButton = findViewById(R.id.shareEventButton);
+        notifyEventButton = findViewById(R.id.notifyEventButton);
         floatingActionJoinEvent = findViewById(R.id.floatingActionJoinEvent);
 
         mAuth = FirebaseAuth.getInstance();
@@ -101,13 +113,33 @@ public class SingleEventScreen extends AppCompatActivity {
             public void onClick(View view) {
                 if (joinEventButton.getVisibility() == View.INVISIBLE) {
                     joinEventButton.setVisibility(View.VISIBLE);
+                    shareEventButton.setVisibility(View.VISIBLE);
+                    notifyEventButton.setVisibility(View.VISIBLE);
                 } else {
                     joinEventButton.setVisibility(View.INVISIBLE);
+                    shareEventButton.setVisibility(View.INVISIBLE);
+                    notifyEventButton.setVisibility(View.INVISIBLE);
                 }
             }
         });
 
         joinEventButton.setOnClickListener(showMyPetChooserDialog);
+
+        //setting event on a button which sends event details to sms or email
+        shareEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hi, check out this event!" + "\n" + eventTitle + "\n" + "Details: " + eventDetails + "\n" + "Time: " +eventDateTimeString);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+        });
+
+        notifyEventButton.setOnClickListener(setEventNotification);
 
 //        Calendar calendarDateTime = StringToDateTimeConverter.stringToCalendar(eventDateTime);
 //        Log.i("calendar object", calendarDateTime.getTime().toString());
@@ -377,9 +409,9 @@ public class SingleEventScreen extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    ArrayAdapter<Pet> myPetsAapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_text_file, myPetsList);
-                    myPetsAapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerMyPets.setAdapter(myPetsAapter);
+                    ArrayAdapter<Pet> myPetsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_text_file, myPetsList);
+                    myPetsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerMyPets.setAdapter(myPetsAdapter);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -411,6 +443,19 @@ public class SingleEventScreen extends AppCompatActivity {
             myPetChooserDialog.show();
         }
     };
+
+//    private View.OnClickListener handleShareEvent = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            Intent sendIntent = new Intent();
+//            sendIntent.setAction(Intent.ACTION_SEND);
+//            sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+//            sendIntent.setType("text/plain");
+//
+//            Intent shareIntent = Intent.createChooser(sendIntent, null);
+//            startActivity(shareIntent);
+//        }
+//    };
 
     //gets adds my pet to an event and sends it ot the database
     public void addPetToEvent(Pet myPet) {
@@ -448,6 +493,40 @@ public class SingleEventScreen extends AppCompatActivity {
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
+
+    private View.OnClickListener setEventNotification = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(SingleEventScreen.this, MyEventNotificationReceiver.class);
+            intent.putExtra("eventTitle", editTextEventTitle.getText().toString());
+            intent.putExtra("eventDetails", editTextEventDetails.getText().toString());
+
+//            Log.i("sender title ", editTextEventTitle.getText().toString());
+//            Log.i("sender details ", editTextEventDetails.getText().toString());
+
+            String eventDateTimeString = getIntent().getStringExtra("eventDateTime");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            LocalDateTime localDateTime = LocalDateTime.parse(eventDateTimeString, formatter);
+            //Long milliseconds = localDateTime.toEpochSecond()
+
+            ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
+            long millis = zdt.toInstant().toEpochMilli();
+            long beforeThreeHours = millis - 10800000;
+//            Log.i("millis ", String.valueOf(millis));
+//            Log.i("3 hours before ", String.valueOf(millis - 10800000));
+//            Log.i("zdt ", zdt.toString());
+
+            PendingIntent sender = PendingIntent.getBroadcast(SingleEventScreen.this, 0, intent, 0);
+            AlarmManager eventAlarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            eventAlarmManager.set(AlarmManager.RTC_WAKEUP, beforeThreeHours, sender);
+//            Log.i("myzone ", ZoneId.systemDefault().toString());
+//            Log.i("mytime ", ZonedDateTime.now().toString());
+//            Log.i("localdatetime ", LocalDateTime.now().toString());
+//            Log.i("utc ", Instant.now().toString());
+        }
+    };
+
+
 
     @Override
     protected void onStart() {

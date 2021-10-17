@@ -144,6 +144,24 @@
                 android:visibility="invisible"
                 />
 
+            <Button
+                android:id="@+id/shareEventButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share Event"
+                style="@style/MainButtons"
+                android:visibility="invisible"
+                />
+
+            <Button
+                android:id="@+id/notifyEventButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notify"
+                style="@style/MainButtons"
+                android:visibility="invisible"
+                />
+
         </LinearLayout>
     </FrameLayout>
 
