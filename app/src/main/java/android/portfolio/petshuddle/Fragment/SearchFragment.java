@@ -215,9 +215,10 @@ public class SearchFragment extends Fragment {
                             String eventDetails = reqobject.getString("eventDetails");
                             String eventLocation = reqobject.getString("eventLocation");
                             String eventDate = reqobject.getString("eventDate");
+                            String userId = reqobject.getString("userId");
                             JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
 //                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
-                            Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate);
+                            Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
                             searchedEventsList.add(responseEvent);
 
                         } catch (JSONException e) {

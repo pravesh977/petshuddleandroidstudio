@@ -40,6 +40,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -76,9 +77,10 @@ public class SingleEventScreen extends AppCompatActivity {
     private Button shareEventButton;
     private Button notifyEventButton;
     private FloatingActionButton floatingActionJoinEvent;
+    private Button startEditPetButton;
+    private Button saveEditPetButton;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,7 @@ public class SingleEventScreen extends AppCompatActivity {
         String eventDetails = getIntent().getStringExtra("eventDetails");
         String eventLocation = getIntent().getStringExtra("eventLocation");
         String eventDateTimeString = getIntent().getStringExtra("eventDateTime");
+        String userId = getIntent().getStringExtra("userId");
 //        Log.i("eventDateTimeString : ", eventDateTimeString);
 
         textViewEventId = findViewById(R.id.textViewEventId);
@@ -103,22 +106,21 @@ public class SingleEventScreen extends AppCompatActivity {
         shareEventButton = findViewById(R.id.shareEventButton);
         notifyEventButton = findViewById(R.id.notifyEventButton);
         floatingActionJoinEvent = findViewById(R.id.floatingActionJoinEvent);
+        startEditPetButton = findViewById(R.id.startEditPetButton);
+        saveEditPetButton = findViewById(R.id.saveEditPetButton);
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        String currentUserId = currentUser.getUid();
 
         //setting up a toggle for the joinevent button on the floating action button
         floatingActionJoinEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (joinEventButton.getVisibility() == View.INVISIBLE) {
-                    joinEventButton.setVisibility(View.VISIBLE);
-                    shareEventButton.setVisibility(View.VISIBLE);
-                    notifyEventButton.setVisibility(View.VISIBLE);
+                    displayButtonsCollection();
                 } else {
-                    joinEventButton.setVisibility(View.INVISIBLE);
-                    shareEventButton.setVisibility(View.INVISIBLE);
-                    notifyEventButton.setVisibility(View.INVISIBLE);
+                    hideButtonsCollection();
                 }
             }
         });
@@ -136,6 +138,8 @@ public class SingleEventScreen extends AppCompatActivity {
 
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
                 startActivity(shareIntent);
+
+                hideButtonsCollection();
             }
         });
 
@@ -238,6 +242,13 @@ public class SingleEventScreen extends AppCompatActivity {
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
 
+        if(currentUserId.equals(userId)) {
+            startEditPetButton.setVisibility(View.VISIBLE);
+            saveEditPetButton.setVisibility(View.VISIBLE);
+        } else {
+            startEditPetButton.setVisibility(View.INVISIBLE);
+            saveEditPetButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void openDatePickerForEvent(LocalDate givenLocalDate) {
@@ -306,6 +317,7 @@ public class SingleEventScreen extends AppCompatActivity {
             petJson.put("eventDetails", details);
             petJson.put("eventLocation", location);
             petJson.put("eventDate", dateTime);
+            petJson.put("userId", getIntent().getStringExtra("userId"));
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
@@ -321,7 +333,6 @@ public class SingleEventScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 Toast.makeText(SingleEventScreen.this, "Something went wrong: " + error.getMessage(), Toast.LENGTH_LONG).show();
-
             }
         }) {
             @Override
@@ -441,6 +452,7 @@ public class SingleEventScreen extends AppCompatActivity {
                 }
             });
             myPetChooserDialog.show();
+            hideButtonsCollection();
         }
     };
 
@@ -523,10 +535,29 @@ public class SingleEventScreen extends AppCompatActivity {
 //            Log.i("mytime ", ZonedDateTime.now().toString());
 //            Log.i("localdatetime ", LocalDateTime.now().toString());
 //            Log.i("utc ", Instant.now().toString());
+            hideButtonsCollection();
+            Snackbar.make(petsForEventsRecyclerView, "You will be notified 3 hours before the event begins", Snackbar.LENGTH_LONG).show();
         }
     };
 
+    public void displayButtonsCollection() {
+        joinEventButton.setVisibility(View.VISIBLE);
+        joinEventButton.animate().alpha(1f).setDuration(500);
+        shareEventButton.setVisibility(View.VISIBLE);
+        shareEventButton.animate().alpha(1f).setDuration(500);
+        notifyEventButton.setVisibility(View.VISIBLE);
+        notifyEventButton.animate().alpha(1f).setDuration(500);
+    }
 
+    public void hideButtonsCollection() {
+        joinEventButton.animate().alpha(0f).setDuration(500);
+        joinEventButton.setVisibility(View.INVISIBLE);
+        shareEventButton.animate().alpha(0f).setDuration(500);
+        shareEventButton.setVisibility(View.INVISIBLE);
+        notifyEventButton.animate().alpha(0f).setDuration(500);
+        notifyEventButton.setVisibility(View.INVISIBLE);
+        //notifyEventButton.animate().alpha(0.0f).setDuration(2000);
+    }
 
     @Override
     protected void onStart() {

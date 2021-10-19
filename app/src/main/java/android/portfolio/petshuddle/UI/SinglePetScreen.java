@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,9 +33,14 @@ public class SinglePetScreen extends AppCompatActivity {
     private EditText editTextPetBreed;
     private EditText editTextPetAge;
     private EditText editTextPetDescription;
+    private Button startEditPetButton;
+    private Button saveEditPetButton;
     private String petUserId;
     private Spinner editGenderSpinner;
     private Spinner editSpeciesSpinner;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,10 @@ public class SinglePetScreen extends AppCompatActivity {
         String petDescription = getIntent().getStringExtra("description");
         petUserId = getIntent().getStringExtra("userId");
 
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        currentUserId = currentUser.getUid();
+
         editTextPetId = findViewById(R.id.editTextPetId);
         editTextPetName = findViewById(R.id.editTextPetName);
 //        editTextPetSpecies = findViewById(R.id.editTextPetSpecies);
@@ -59,6 +71,8 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetAge = findViewById(R.id.editTextPetAge);
         editTextPetDescription = findViewById(R.id.editTextPetDescription);
         editGenderSpinner = findViewById(R.id.editGenderSpinner);
+        startEditPetButton = findViewById(R.id.startEditPetButton);
+        saveEditPetButton = findViewById(R.id.saveEditPetButton);
 //        editTextPetUserId = findViewById(R.id.editTextPetUserId);
 
         String petGenders[] = {"Male", "Female"};
@@ -82,6 +96,15 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetBreed.setText(breed);
         editTextPetDescription.setText(petDescription);
 //        editTextPetUserId.setText(userId);
+
+        if(currentUserId.equals(petUserId)) {
+            startEditPetButton.setVisibility(View.VISIBLE);
+            saveEditPetButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            startEditPetButton.setVisibility(View.INVISIBLE);
+            saveEditPetButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     //handles the cancel button which sends the user back to the main tabbed view without making any changes

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UI.SingleEventScreen"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
 
     <FrameLayout
@@ -66,7 +67,8 @@
                     android:cursorVisible="false"
                     style="@style/PetsListStyle"
                     android:background="@null"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center"
+                    android:maxLength="1500"/>
 
                 <EditText
                     android:id="@+id/editTextEventLocation"
@@ -108,16 +110,31 @@
                     android:textAlignment="center"/>
             </LinearLayout>
 
-
-
     </ScrollView>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/petsForEventsRecyclerView"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_gravity="bottom|center"/>
+            android:layout_gravity="bottom|center">
+            <TextView
+                app:layout_constraintBottom_toTopOf="@+id/petsForEventsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/PetsListStyle"
+                android:textAlignment="center"
+                android:text="Attendees"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/petsForEventsRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"

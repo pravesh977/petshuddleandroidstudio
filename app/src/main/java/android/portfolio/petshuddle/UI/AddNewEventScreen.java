@@ -31,6 +31,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +54,8 @@ public class AddNewEventScreen extends AppCompatActivity {
     private EditText editTextEventLocation;
     private TextView textViewEventDate;
     private TextView textViewEventTime;
+    private FirebaseAuth mAuth;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,10 @@ public class AddNewEventScreen extends AppCompatActivity {
         editTextEventLocation = findViewById(R.id.editTextEventLocation);
         textViewEventDate = findViewById(R.id.textViewEventDate);
         textViewEventTime = findViewById(R.id.textViewEventTime);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUserId = currentUser.getUid();
 
         textViewEventDate.setOnClickListener(openDatePicker);
         textViewEventTime.setOnClickListener(openTimePicker);
@@ -179,6 +187,7 @@ public class AddNewEventScreen extends AppCompatActivity {
             eventJson.put("eventDetails", details);
             eventJson.put("eventLocation", location);
             eventJson.put("eventDate", dateTime);
+            eventJson.put("userId", currentUserId);
         } catch(JSONException ex) {
             ex.printStackTrace();
         }

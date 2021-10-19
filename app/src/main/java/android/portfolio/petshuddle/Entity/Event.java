@@ -9,13 +9,15 @@ public class Event {
     private String eventDetails;
     private String eventLocation;
     private String eventDate;
+    private String userId;
 
-    public Event(int eventId, String eventTitle, String eventDetails, String eventLocation, String eventDate) {
+    public Event(int eventId, String eventTitle, String eventDetails, String eventLocation, String eventDate, String userId) {
         this.eventId = eventId;
         this.eventTitle = eventTitle;
         this.eventDetails = eventDetails;
         this.eventLocation = eventLocation;
         this.eventDate = eventDate;
+        this.userId = userId;
     }
 
     public int getEventId() {
@@ -56,6 +58,14 @@ public class Event {
 
     public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
 

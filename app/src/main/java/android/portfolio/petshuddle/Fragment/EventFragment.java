@@ -36,6 +36,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +64,9 @@ public class EventFragment extends Fragment {
     private FloatingActionButton floatingActionButtonEvent;
     private Button newEventScreenButton;
     private Boolean isButtonVisible;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private String currentUserId;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -101,8 +106,11 @@ public class EventFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.i("fragcrae", "created fragment");
+        //Log.i("fragcrae", "created fragment");
         isButtonVisible = false;
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        currentUserId = currentUser.getUid();
     }
 
     @Override
@@ -152,10 +160,15 @@ public class EventFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         int position = viewHolder.getAdapterPosition();
                         Event currentEvent = eventList.get(position);
-                        handleDeleteEvent(currentEvent.getEventId());
-                        eventList.remove(currentEvent);
-                        eventsAdapter.notifyItemRemoved(position);
-                        Snackbar.make(eventsRecyclerView,"Deleted Event " + currentEvent.getEventTitle(), Snackbar.LENGTH_LONG).show();
+                        Boolean checkDeleteAuthority = handleDeleteEvent(currentEvent.getEventId(), currentEvent.getUserId());
+                        if(checkDeleteAuthority == true) {
+                            eventList.remove(currentEvent);
+                            eventsAdapter.notifyItemRemoved(position);
+                            Snackbar.make(eventsRecyclerView, "Deleted Event " + currentEvent.getEventTitle(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(floatingActionButtonEvent, "Cannot delete event created by other users", Snackbar.LENGTH_LONG).show();
+                            eventsAdapter.notifyItemChanged(position);
+                        }
                     }
                 });
                 aBuilder.setNegativeButton("Nope", new DialogInterface.OnClickListener() {
@@ -200,9 +213,10 @@ public class EventFragment extends Fragment {
                         String eventDetails = reqobject.getString("eventDetails");
                         String eventLocation = reqobject.getString("eventLocation");
                         String eventDate = reqobject.getString("eventDate");
+                        String userId = reqobject.getString("userId");
                         JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
 //                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
-                        Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate);
+                        Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
                         eventList.add(responseEvent);
 
                     } catch (JSONException e) {
@@ -224,9 +238,11 @@ public class EventFragment extends Fragment {
 
     }
 
-    public void handleDeleteEvent(int deleteEventId) {
+    public boolean handleDeleteEvent(int deleteEventId, String userId) {
 
-        String url = "http://10.0.2.2:8080/api/events/";
+        if(currentUserId.equals(userId)) {
+
+            String url = "http://10.0.2.2:8080/api/events/";
 
 //        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url + deleteEventId, null, new Response.Listener<JSONObject>() {
 //            @Override
@@ -238,19 +254,18 @@ public class EventFragment extends Fragment {
 //                error.printStackTrace();
 //            }
 //        })
-        //this is a string request because api sends a string only instead of a jsonobject or jsonarray
-        StringRequest request = new StringRequest(Request.Method.DELETE, url + deleteEventId, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+            //this is a string request because api sends a string only instead of a jsonobject or jsonarray
+            StringRequest request = new StringRequest(Request.Method.DELETE, url + deleteEventId, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
 //                Log.i("deletedis ", response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        })
-        {
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            }) {
 //            @Override
 //            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
 //                int statusCode = response.statusCode;
@@ -264,11 +279,15 @@ public class EventFragment extends Fragment {
 //                }
 //                return super.parseNetworkResponse(response);
 //            }
-        };
+            };
 
 
-        MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
-
+            MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
+            return true;
+            //fixme: create snackbar with delete
+        } else {
+            return false;
+        }
 
     }
 
