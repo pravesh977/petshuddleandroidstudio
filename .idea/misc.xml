@@ -12,11 +12,12 @@
         <entry key="app/src/main/res/drawable/roundedfullround.xml" value="0.15745614035087718" />
         <entry key="app/src/main/res/font/niconnefont.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/activity_add_new_event_screen.xml" value="0.1850877192982456" />
-        <entry key="app/src/main/res/layout/activity_add_new_pet_screen.xml" value="0.1850877192982456" />
+        <entry key="app/src/main/res/layout/activity_add_new_pet_screen.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login_screen.xml" value="0.2269021739130435" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23505434782608695" />
         <entry key="app/src/main/res/layout/activity_main_tabbed.xml" value="0.23324275362318841" />
         <entry key="app/src/main/res/layout/activity_registration_screen.xml" value="0.232097030948169" />
+        <entry key="app/src/main/res/layout/activity_report_screen.xml" value="0.17149122807017544" />
         <entry key="app/src/main/res/layout/activity_single_event_screen.xml" value="0.18552631578947368" />
         <entry key="app/src/main/res/layout/activity_single_pet_screen.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_welcome_screen.xml" value="0.2269021739130435" />

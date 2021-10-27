@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.portfolio.petshuddle.Entity.User;
 import android.portfolio.petshuddle.UI.MainTabbedActivity;
 import android.portfolio.petshuddle.UI.RegistrationScreen;
+import android.portfolio.petshuddle.UI.ReportScreen;
 import android.portfolio.petshuddle.UI.WelcomeScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,6 +107,13 @@ public class UserProfileFragment extends Fragment {
         TextView userNameTextView = view.findViewById(R.id.userNameTextView);
         TextView userEmailTextView = view.findViewById(R.id.userEmailTextView);
         TextView userIdTextView = view.findViewById(R.id.userIdTextView);
+        Button reportButton = view.findViewById(R.id.reportButton);
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), ReportScreen.class));
+            }
+        });
         Button signOutButton = view.findViewById(R.id.signOutButton);
         signOutButton.setOnClickListener(handleSignOut);
         FirebaseUser currentUser = mAuth.getCurrentUser();

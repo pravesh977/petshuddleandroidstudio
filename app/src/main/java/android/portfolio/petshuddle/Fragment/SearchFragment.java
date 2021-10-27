@@ -119,7 +119,7 @@ public class SearchFragment extends Fragment {
         searchLinearLayout = view.findViewById(R.id.searchLinearLayout);
         searchRecyclerView = view.findViewById(R.id.searchRecyclerView);
         mySearchView.setSubmitButtonEnabled(true);
-        String[] searchStringArray = {"Pets", "Events"};
+        String[] searchStringArray = {"Events", "Pets"};
         ArrayAdapter<String> searchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, searchStringArray);
         searchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         searchSpinner.setAdapter(searchAdapter);
@@ -180,14 +180,12 @@ public class SearchFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-//                    searchLinearLayout.removeView(searchedPetsRecyclerView);
-                    MyPetsAdapter myPetsAdapter = new MyPetsAdapter(searchedPetsList, getContext());
-                    searchRecyclerView.setAdapter(myPetsAdapter);
-                    searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//                    Log.i("sizeofarray", String.valueOf(searchedPetsList.size()));
-                    //searchLinearLayout.addView(searchedPetsRecyclerView);
-//                Log.i("arraysize : ", String.valueOf(myPetsList.size()));
-
+                    if(searchedPetsList.size() == 0) {
+                        Snackbar.make(searchRecyclerView, "Could not find any Pet with name " + query, Snackbar.LENGTH_LONG).show();
+                    }
+                        MyPetsAdapter myPetsAdapter = new MyPetsAdapter(searchedPetsList, getContext());
+                        searchRecyclerView.setAdapter(myPetsAdapter);
+                        searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -195,7 +193,6 @@ public class SearchFragment extends Fragment {
                     error.printStackTrace();
                 }
             });
-
             MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
         }
         else {
@@ -225,9 +222,12 @@ public class SearchFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    EventsAdapter eventsAdapter = new EventsAdapter(searchedEventsList, getContext());
-                    searchRecyclerView.setAdapter(eventsAdapter);
-                    searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    if(searchedEventsList.size() == 0) {
+                        Snackbar.make(searchRecyclerView, "Could not find any Event with title " + query, Snackbar.LENGTH_LONG).show();
+                    }
+                        EventsAdapter eventsAdapter = new EventsAdapter(searchedEventsList, getContext());
+                        searchRecyclerView.setAdapter(eventsAdapter);
+                        searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -235,7 +235,6 @@ public class SearchFragment extends Fragment {
                     error.printStackTrace();
                 }
             });
-
             MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
         }
     }

@@ -39,6 +39,7 @@
                     android:hint="Event Title"
                     android:textAlignment="center"
                     style="@style/PetsListStyle"
+                    android:maxLength="30"
                     />
 
 
@@ -49,7 +50,7 @@
                     android:hint="Details"
                     android:textAlignment="center"
                     style="@style/PetsListStyle"
-                    android:maxLength="1500"
+                    android:maxLength="1000"
                     />
 
                 <EditText
@@ -58,7 +59,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Location"
                     style="@style/PetsListStyle"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center"
+                    android:maxLength="30"/>
 
                 <TextView
                     android:id="@+id/textViewEventDate"

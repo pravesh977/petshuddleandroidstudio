@@ -80,7 +80,8 @@
                         android:focusableInTouchMode="false"
                         android:cursorVisible="false"
                         style="@style/PetsListStyle"
-                        android:background="@null" />
+                        android:background="@null"
+                        android:maxLength="30"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -130,7 +131,8 @@
                         android:focusableInTouchMode="false"
                         android:cursorVisible="false"
                         style="@style/PetsListStyle"
-                        android:background="@null" />
+                        android:background="@null"
+                        android:maxLength="3"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -178,7 +180,8 @@
                         android:focusableInTouchMode="false"
                         android:cursorVisible="false"
                         style="@style/PetsListStyle"
-                        android:background="@null" />
+                        android:background="@null"
+                        android:maxLength="30"/>
                 </LinearLayout>
 
 
@@ -210,6 +213,7 @@
                         android:cursorVisible="false"
                         style="@style/PetsListStyle"
                         android:background="@null"
+                        android:maxLength="1000"
                         />
 
                 </LinearLayout>

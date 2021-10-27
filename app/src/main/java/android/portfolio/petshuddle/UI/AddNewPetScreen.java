@@ -138,18 +138,9 @@ public class AddNewPetScreen extends AppCompatActivity {
             ex.printStackTrace();
         }
 
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, petJson, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //update UI here
-//                Intent intent = new Intent(AddNewPetScreen.this, MainTabbedActivity.class);
-//                startActivity(intent);
-//                Log.i("added object is : ", response.toString());
-//                MyPetsFragment petsFragment = new MyPetsFragment();
-//                petsFragment.changeList();
-//                finish();
-//                if(status)
                 }
         }, new Response.ErrorListener() {
             @Override

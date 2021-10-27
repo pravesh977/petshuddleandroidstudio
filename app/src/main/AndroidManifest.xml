@@ -10,9 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PetsHuddle">
         <activity
+            android:name=".UI.ReportScreen"
+            android:exported="true" />
+        <activity
             android:name=".UI.AddNewEventScreen"
             android:exported="true" />
-
         <activity
             android:name=".UI.SingleEventScreen"
             android:exported="true" />
@@ -43,13 +45,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name=".Helper.MyEventNotificationReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>
