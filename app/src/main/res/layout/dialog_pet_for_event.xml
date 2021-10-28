@@ -8,6 +8,7 @@
     android:background="#CDE1EB">
 
     <TextView
+        android:id="@+id/petChooserTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Choose your pet to take to the event"

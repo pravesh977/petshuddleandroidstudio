@@ -1,12 +1,19 @@
 package android.portfolio.petshuddle.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
+import android.portfolio.petshuddle.Entity.Friend;
+import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.R;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,18 +24,25 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SinglePetScreen extends AppCompatActivity {
 
     private TextView editTextPetId;
     private EditText editTextPetName;
-//    private EditText editTextPetSpecies;
+    //    private EditText editTextPetSpecies;
 //    private EditText editTextPetSex;
     private EditText editTextPetBreed;
     private EditText editTextPetAge;
@@ -41,6 +55,12 @@ public class SinglePetScreen extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private String currentUserId;
+    private FloatingActionButton floatingActionAddFriend;
+    private Button addFriendButton;
+    private RecyclerView petsFriendsRecyclerView;
+    List<Friend> friendsList = new ArrayList<>();
+    List<Integer> friendsIdList = new ArrayList<>();
+    private TextView textViewNumberOfFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +94,23 @@ public class SinglePetScreen extends AppCompatActivity {
         startEditPetButton = findViewById(R.id.startEditPetButton);
         saveEditPetButton = findViewById(R.id.saveEditPetButton);
 //        editTextPetUserId = findViewById(R.id.editTextPetUserId);
+        floatingActionAddFriend = findViewById(R.id.floatingActionAddFriend);
+        addFriendButton = findViewById(R.id.addFriendButton);
+        petsFriendsRecyclerView = findViewById(R.id.petsFriendsRecyclerView);
+        textViewNumberOfFriends = findViewById(R.id.textViewNumberOfFriends);
+
+        floatingActionAddFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (addFriendButton.getVisibility() == View.INVISIBLE) {
+                    addFriendButton.setVisibility(View.VISIBLE);
+                } else {
+                    addFriendButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        addFriendButton.setOnClickListener(openPetChooserDialog);
 
         String petGenders[] = {"Male", "Female"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, petGenders);
@@ -97,14 +134,56 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetDescription.setText(petDescription);
 //        editTextPetUserId.setText(userId);
 
-        if(currentUserId.equals(petUserId)) {
+        if (currentUserId.equals(petUserId)) {
             startEditPetButton.setVisibility(View.VISIBLE);
             saveEditPetButton.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             startEditPetButton.setVisibility(View.INVISIBLE);
             saveEditPetButton.setVisibility(View.INVISIBLE);
         }
+
+        String url = "http://10.0.2.2:8080/api/friendslist/friendsbypetid/";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + petId, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject reqobject = response.getJSONObject(i);
+                        int petId = reqobject.getInt("petId");
+                        int friendId = reqobject.getInt("friendId");
+                        Friend friendObject = new Friend(petId, friendId);
+                        friendsList.add(friendObject);
+                        friendsIdList.add(friendId);
+                        Log.i("friend is ", String.valueOf(friendObject.getFriendId()));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+//                myPetsForEventAdapter = new MyPetsAdapter(petsListForEvent, SingleEventScreen.this);
+//                petsForEventsRecyclerView.setAdapter(myPetsForEventAdapter);
+
+                    //same as above function. this changes the child/viewholder's width to half of the xml file's width
+//                petsForEventsRecyclerView.setLayoutManager(new LinearLayoutManager(SingleEventScreen.this, LinearLayoutManager.HORIZONTAL, false) {
+//                    @Override
+//                    public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+//                        lp.width = getWidth() / 2;
+////                        return super.checkLayoutParams(lp);
+//                        return true;
+//                    }
+//                });
+                }
+                getFriendsProfile();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
+
     }
 
     //handles the cancel button which sends the user back to the main tabbed view without making any changes
@@ -162,7 +241,7 @@ public class SinglePetScreen extends AppCompatActivity {
         String description = editTextPetDescription.getText().toString().trim();
         String userId = petUserId;
 
-        if(name.isEmpty()) {
+        if (name.isEmpty()) {
             editTextPetName.setError("Name can't be empty");
             editTextPetName.requestFocus();
             return;
@@ -177,24 +256,24 @@ public class SinglePetScreen extends AppCompatActivity {
 //            editTextPetSex.requestFocus();
 //            return;
 //        }
-        if(breed.isEmpty()) {
+        if (breed.isEmpty()) {
             editTextPetBreed.setError("Breed can't be empty");
             editTextPetBreed.requestFocus();
             return;
         }
-        if(age.isEmpty()) {
+        if (age.isEmpty()) {
             editTextPetAge.setError("Age can't be empty");
             editTextPetAge.requestFocus();
             return;
         }
-        if(description.isEmpty()) {
+        if (description.isEmpty()) {
             editTextPetDescription.setError("Description can't be empty");
             editTextPetDescription.requestFocus();
             return;
         }
 
         // Instantiate the RequestQueue.
-        String url ="http://10.0.2.2:8080/api/petshuddle/";
+        String url = "http://10.0.2.2:8080/api/petshuddle/";
 
         JSONObject petJson = new JSONObject();
         try {
@@ -205,7 +284,7 @@ public class SinglePetScreen extends AppCompatActivity {
             petJson.put("age", age);
             petJson.put("petDescription", description);
             petJson.put("userId", userId);
-        } catch(JSONException ex) {
+        } catch (JSONException ex) {
             ex.printStackTrace();
         }
 
@@ -225,4 +304,151 @@ public class SinglePetScreen extends AppCompatActivity {
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
-}
+
+    public View.OnClickListener openPetChooserDialog = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            final Dialog myPetChooserDialog = new Dialog(SinglePetScreen.this);
+            myPetChooserDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            myPetChooserDialog.setCancelable(true);
+            myPetChooserDialog.setContentView(R.layout.dialog_pet_for_event);
+
+            //get views from the layout. it has to be done here and not on the class initializer because it belongs
+            //to another layout
+            Button choosePetButton = myPetChooserDialog.findViewById(R.id.choosePetButton);
+            Button cancelChoosePetButton = myPetChooserDialog.findViewById(R.id.cancelChoosePetButton);
+            Spinner spinnerMyPets = myPetChooserDialog.findViewById(R.id.spinnerMyPets);
+            TextView petChooserTitle = myPetChooserDialog.findViewById(R.id.petChooserTitle);
+            petChooserTitle.setText("Choose which of your pets will make friends with " + editTextPetName.getText());
+
+            List<Pet> myPetsList = new ArrayList<>();
+
+            String url = "http://10.0.2.2:8080/api/petshuddle/userid/";
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + currentUser.getUid(), null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject reqobject = response.getJSONObject(i);
+                            int petId = reqobject.getInt("petId");
+                            String petName = reqobject.getString("petName");
+                            String species = reqobject.getString("species");
+                            String sex = reqobject.getString("sex");
+                            String breed = reqobject.getString("breed");
+                            int age = reqobject.getInt("age");
+                            String petDescription = reqobject.getString("petDescription");
+                            String userId = reqobject.getString("userId");
+                            Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
+                            myPetsList.add(jsonPet);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    ArrayAdapter<Pet> myPetsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_text_file, myPetsList);
+                    myPetsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerMyPets.setAdapter(myPetsAdapter);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+
+            MySingletonRequestQueue.getInstance(SinglePetScreen.this).addToRequestQueue(request);
+
+            //handles the cancel button of the dialog and closes it
+            cancelChoosePetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    myPetChooserDialog.dismiss();
+                }
+            });
+
+            //handles the choosepet button and saves it to the current event
+            choosePetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Pet selectedPet = (Pet) spinnerMyPets.getSelectedItem();
+                    addFriendToMyPet(selectedPet);
+                    myPetChooserDialog.dismiss();
+                }
+            });
+            myPetChooserDialog.show();
+            addFriendButton.setVisibility(View.INVISIBLE);
+        }
+    };
+
+    public void addFriendToMyPet(Pet myPet) {
+
+    }
+
+    public void getFriendsProfile() {
+
+        JSONArray friendsIdJsonArray = new JSONArray(friendsIdList);
+//        Log.i("array lenght is : ", String.valueOf(friendsIdJsonArray.length()));
+//        Log.i("array is : ", String.valueOf(friendsIdJsonArray));
+//        for(int i = 0; i< friendsIdJsonArray.length(); i++) {
+//            try {
+//                Log.i("passed array is : ", String.valueOf(friendsIdJsonArray.get(i)));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+
+        String url = "http://10.0.2.2:8080/api/petshuddle/petfriends/";
+        List<Pet> friendsForPetList = new ArrayList<>();
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, friendsIdJsonArray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject reqobject = response.getJSONObject(i);
+                        int petId = reqobject.getInt("petId");
+                        String petName = reqobject.getString("petName");
+                        String species = reqobject.getString("species");
+                        String sex = reqobject.getString("sex");
+                        String breed = reqobject.getString("breed");
+                        int age = reqobject.getInt("age");
+                        String petDescription = reqobject.getString("petDescription");
+                        String userId = reqobject.getString("userId");
+//                        Log.i("petName : ", petName);
+//                        Log.i("Description", petDescription);
+                        Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
+                        friendsForPetList.add(jsonPet);
+//                        Log.i("petname is: ", jsonPet.getPetName());
+//                        Log.i("pets list increment: ", String.valueOf(myPetsList.size()));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(friendsForPetList.size() == 0) {
+                    textViewNumberOfFriends.setText("This pet has no friends yet!");
+                }
+                MyPetsAdapter myPetsAdapter = new MyPetsAdapter(friendsForPetList, SinglePetScreen.this);
+                petsFriendsRecyclerView.setAdapter(myPetsAdapter);
+                petsFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(SinglePetScreen.this, LinearLayoutManager.HORIZONTAL, false) {
+                    @Override
+                    public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+                        lp.width = getWidth() / 2;
+//                        return super.checkLayoutParams(lp);
+                        return true;
+                    }
+                });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
+    }
+
+};

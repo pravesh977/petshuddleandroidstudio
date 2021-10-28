@@ -182,7 +182,7 @@ public class SingleEventScreen extends AppCompatActivity {
 
         //setting up the horizontal recyclerview containing the pets for the event
         petsListForEvent.clear();
-        Log.i("started", " app started");
+//        Log.i("started", " app started");
         String url = "http://10.0.2.2:8080/api/events/";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + eventId, null, new Response.Listener<JSONObject>() {

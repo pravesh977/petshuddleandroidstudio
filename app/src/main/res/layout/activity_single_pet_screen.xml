@@ -12,6 +12,7 @@
         android:id="@+id/petDetailsFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
 <!--        app:layout_constraintTop_toTopOf="parent"-->
         <ImageView
             android:id="@+id/imageView4"
@@ -19,6 +20,7 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/catfishbowl"
             android:scaleType="centerCrop"/>
+
 
         <ScrollView
             android:layout_width="match_parent"
@@ -218,31 +220,55 @@
 
                 </LinearLayout>
 
-<!--                <LinearLayout-->
-<!--                    android:layout_margin="10dp"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:background="@drawable/roundedpetscornerbackground">-->
+                <TextView
+                    android:id="@+id/textViewNumberOfFriends"
+                    style="@style/PetsListStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Friends"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:background="#CAD6E8"
+                    android:layout_marginTop="30dp"
+                />
 
-<!--                    <TextView-->
-<!--                        style="@style/PetsListStyle"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Owner:"-->
-<!--                        />-->
-
-<!--                    <EditText-->
-<!--                        android:id="@+id/editTextPetUserId"-->
-<!--                        style="@style/PetsListStyle"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="User Id" />-->
-<!--                </LinearLayout>-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/petsFriendsRecyclerView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </LinearLayout>
         </ScrollView>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionAddFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/addeventfab"
+                android:layout_gravity="right"/>
+            <Button
+                android:id="@+id/addFriendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Friend"
+                style="@style/MainButtons"
+                android:visibility="invisible"
+                />
+        </LinearLayout>
     </FrameLayout>
 
     <LinearLayout
