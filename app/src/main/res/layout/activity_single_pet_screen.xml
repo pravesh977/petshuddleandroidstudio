@@ -246,6 +246,7 @@
         </ScrollView>
 
         <LinearLayout
+            android:id="@+id/petFloatingLinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|right"
@@ -277,9 +278,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
         >
 
         <Button
@@ -288,11 +289,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cancel"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             style="@style/MainButtons"
             android:backgroundTint="#E85E5A"
-            android:onClick="handleCancelEditPet"/>
+            android:onClick="handleCancelEditPet"
+            android:textSize="15sp"/>
 
         <Button
             android:id="@+id/startEditPetButton"
@@ -300,12 +302,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Edit"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             style="@style/MainButtons"
             android:backgroundTint="#A66FFC"
             android:onClick="handleStartEditPressed"
+            android:textSize="15sp"
             />
+        <Button
+            android:id="@+id/friendRequestButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Requests"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            style="@style/MainButtons"
+            android:onClick="viewFriendRequests"
+            android:backgroundTint="#EBD167"
+            android:textSize="15sp"/>
 
         <Button
             android:id="@+id/saveEditPetButton"
@@ -313,10 +328,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Save"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             style="@style/MainButtons"
-            android:onClick="handleSavePetEdit"/>
+            android:onClick="handleSavePetEdit"
+            android:textSize="15sp"/>
     </LinearLayout>
 
 </LinearLayout>

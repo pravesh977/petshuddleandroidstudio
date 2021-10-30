@@ -1,10 +1,13 @@
 package android.portfolio.petshuddle.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
 import android.portfolio.petshuddle.Entity.Friend;
@@ -13,14 +16,18 @@ import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.R;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -61,6 +68,10 @@ public class SinglePetScreen extends AppCompatActivity {
     List<Friend> friendsList = new ArrayList<>();
     List<Integer> friendsIdList = new ArrayList<>();
     private TextView textViewNumberOfFriends;
+    List<Pet> friendsForPetList = new ArrayList<>();
+    private MyPetsAdapter petFriendsAdapter;
+    private LinearLayout petFloatingLinearLayout;
+    private Button friendRequestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +109,14 @@ public class SinglePetScreen extends AppCompatActivity {
         addFriendButton = findViewById(R.id.addFriendButton);
         petsFriendsRecyclerView = findViewById(R.id.petsFriendsRecyclerView);
         textViewNumberOfFriends = findViewById(R.id.textViewNumberOfFriends);
+        petFloatingLinearLayout = findViewById(R.id.petFloatingLinearLayout);
+        friendRequestButton = findViewById(R.id.friendRequestButton);
+
+//        Button requestButton = new Button(new ContextThemeWrapper(this, R.style.MainButtons), null, 0);
+//        requestButton.setText("Friend Requests");
+//        requestButton.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        requestButton.setVisibility(View.INVISIBLE);
+//        requestButton.setBackgroundColor(Color.parseColor("#71E798"));
 
         floatingActionAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,12 +156,17 @@ public class SinglePetScreen extends AppCompatActivity {
         if (currentUserId.equals(petUserId)) {
             startEditPetButton.setVisibility(View.VISIBLE);
             saveEditPetButton.setVisibility(View.VISIBLE);
+//            petFloatingLinearLayout.addView(requestButton);
+            friendRequestButton.setVisibility(View.VISIBLE);
         } else {
             startEditPetButton.setVisibility(View.INVISIBLE);
             saveEditPetButton.setVisibility(View.INVISIBLE);
+            friendRequestButton.setVisibility(View.INVISIBLE);
         }
 
+        //getting a list of friends for current pet using its id
         String url = "http://10.0.2.2:8080/api/friendslist/friendsbypetid/";
+//        Log.i("current pet id is : ", String.valueOf(petId));
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + petId, null, new Response.Listener<JSONArray>() {
             @Override
@@ -155,24 +179,14 @@ public class SinglePetScreen extends AppCompatActivity {
                         Friend friendObject = new Friend(petId, friendId);
                         friendsList.add(friendObject);
                         friendsIdList.add(friendId);
-                        Log.i("friend is ", String.valueOf(friendObject.getFriendId()));
+//                        Log.i("friend object ", friendObject.toString());
+//                        Log.i("friend is ", String.valueOf(friendObject.getFriendId()));
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                myPetsForEventAdapter = new MyPetsAdapter(petsListForEvent, SingleEventScreen.this);
-//                petsForEventsRecyclerView.setAdapter(myPetsForEventAdapter);
-
-                    //same as above function. this changes the child/viewholder's width to half of the xml file's width
-//                petsForEventsRecyclerView.setLayoutManager(new LinearLayoutManager(SingleEventScreen.this, LinearLayoutManager.HORIZONTAL, false) {
-//                    @Override
-//                    public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
-//                        lp.width = getWidth() / 2;
-////                        return super.checkLayoutParams(lp);
-//                        return true;
-//                    }
-//                });
                 }
+                //loads the list of friends in a horizontal recycler view
                 getFriendsProfile();
             }
         }, new Response.ErrorListener() {
@@ -378,11 +392,59 @@ public class SinglePetScreen extends AppCompatActivity {
             });
             myPetChooserDialog.show();
             addFriendButton.setVisibility(View.INVISIBLE);
+            friendRequestButton.setVisibility(View.INVISIBLE);
         }
     };
 
+    //handles the choose pet button from the dialog and saves the current pet as friend to the chosen pet from the drop down
     public void addFriendToMyPet(Pet myPet) {
 
+        int myChosenPetId = myPet.getPetId();
+        int friendId = getIntent().getIntExtra("petId", -1);
+        char requestStatus = 'p';
+
+        String url ="http://10.0.2.2:8080/api/friendslist";
+
+        JSONObject friendJson = new JSONObject();
+        try {
+            friendJson.put("petId", myChosenPetId);
+            friendJson.put("friendId", friendId);
+            friendJson.put("requestStatus", requestStatus);
+        } catch(JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, friendJson, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                friendsForPetList.add(0, myPet);
+                petFriendsAdapter.notifyItemInserted(0);
+                petsFriendsRecyclerView.scrollToPosition(0);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                int statusCode = response.statusCode;
+//                Log.i("codeis", String.valueOf(statusCode));
+                if(statusCode == 201) {
+
+              }
+                else {
+                    Toast.makeText(SinglePetScreen.this, "Adding Friend Failed: ", Toast.LENGTH_LONG).show();
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+
+        MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
 
     public void getFriendsProfile() {
@@ -400,7 +462,7 @@ public class SinglePetScreen extends AppCompatActivity {
 
 
         String url = "http://10.0.2.2:8080/api/petshuddle/petfriends/";
-        List<Pet> friendsForPetList = new ArrayList<>();
+//        List<Pet> friendsForPetList = new ArrayList<>();
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, friendsIdJsonArray, new Response.Listener<JSONArray>() {
             @Override
@@ -431,8 +493,8 @@ public class SinglePetScreen extends AppCompatActivity {
                 if(friendsForPetList.size() == 0) {
                     textViewNumberOfFriends.setText("This pet has no friends yet!");
                 }
-                MyPetsAdapter myPetsAdapter = new MyPetsAdapter(friendsForPetList, SinglePetScreen.this);
-                petsFriendsRecyclerView.setAdapter(myPetsAdapter);
+                petFriendsAdapter = new MyPetsAdapter(friendsForPetList, SinglePetScreen.this);
+                petsFriendsRecyclerView.setAdapter(petFriendsAdapter);
                 petsFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(SinglePetScreen.this, LinearLayoutManager.HORIZONTAL, false) {
                     @Override
                     public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
@@ -449,6 +511,13 @@ public class SinglePetScreen extends AppCompatActivity {
             }
         });
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
+    }
+
+    public void viewFriendRequests(View view) {
+        int petId = getIntent().getIntExtra("petId", -1);
+        Intent intent = new Intent(SinglePetScreen.this, FriendRequestsScreen.class);
+        intent.putExtra("petId", petId);
+        startActivity(intent);
     }
 
 };

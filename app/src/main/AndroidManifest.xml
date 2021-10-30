@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PetsHuddle">
         <activity
+            android:name=".UI.FriendRequestsScreen"
+            android:exported="true" />
+        <activity
             android:name=".UI.ReportScreen"
             android:exported="true" />
         <activity
@@ -51,8 +54,8 @@
             android:enabled="true"
             android:exported="true" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
