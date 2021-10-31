@@ -6,13 +6,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
+import android.portfolio.petshuddle.Adapter.RequesterAdapter;
 import android.portfolio.petshuddle.Entity.Friend;
 import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.R;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -32,8 +38,9 @@ public class FriendRequestsScreen extends AppCompatActivity {
     List<Integer> requestIdList = new ArrayList<>();
     List<Pet> friendRequesterPetsList = new ArrayList<>();
     private TextView textViewFriendsRequest;
-    private MyPetsAdapter friendRequesterAdapter;
-    private RecyclerView requesterRecyclerView;
+//    private MyPetsAdapter friendRequesterAdapter;
+//    private RecyclerView requesterRecyclerView;
+    private ListView requesterListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +48,8 @@ public class FriendRequestsScreen extends AppCompatActivity {
         setContentView(R.layout.activity_friend_requests_screen);
 
         textViewFriendsRequest = findViewById(R.id.textViewFriendsRequest);
-        requesterRecyclerView = findViewById(R.id.requesterRecyclerView);
+//        requesterRecyclerView = findViewById(R.id.requesterRecyclerView);
+        requesterListView = findViewById(R.id.requesterListView);
 
         int petId = getIntent().getIntExtra("petId", -1);
         //getting a list of friend requests that are not yet accepted for current pet using its id
@@ -117,17 +125,20 @@ public class FriendRequestsScreen extends AppCompatActivity {
                 if(friendRequesterPetsList.size() == 0) {
                     textViewFriendsRequest.setText("No friend requests yet!");
                 }
-                friendRequesterAdapter = new MyPetsAdapter(friendRequesterPetsList, FriendRequestsScreen.this);
-                requesterRecyclerView.setAdapter(friendRequesterAdapter);
-                requesterRecyclerView.setLayoutManager(new LinearLayoutManager(FriendRequestsScreen.this) {
-                    Button button = new Button(FriendRequestsScreen.this);
+//                friendRequesterAdapter = new MyPetsAdapter(friendRequesterPetsList, FriendRequestsScreen.this);
+//                requesterRecyclerView.setAdapter(friendRequesterAdapter);
+//                requesterRecyclerView.setLayoutManager(new LinearLayoutManager(FriendRequestsScreen.this));
+
+                RequesterAdapter requesterAdapter = new RequesterAdapter(FriendRequestsScreen.this, friendRequesterPetsList, getIntent().getIntExtra("petId", -1));
+                requesterListView.setAdapter(requesterAdapter);
+//                requesterListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                    @Override
-//                    public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
-//                        lp.width = getWidth() / 2;
-////                        return super.checkLayoutParams(lp);
-//                        return true;
+//                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                        Toast.makeText(getApplicationContext(), "Click ListItem Number " + , Toast.LENGTH_LONG)
+//                                .show();
 //                    }
-                });
+//                });
+
             }
         }, new Response.ErrorListener() {
             @Override

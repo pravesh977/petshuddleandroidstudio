@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_user_profile.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/pet_item.xml" value="0.1850877192982456" />
+        <entry key="app/src/main/res/layout/requester_item.xml" value="0.165" />
         <entry key="app/src/main/res/layout/spinner_text_file.xml" value="0.11140350877192982" />
       </map>
     </option>
