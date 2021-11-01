@@ -123,7 +123,7 @@ public class FriendRequestsScreen extends AppCompatActivity {
                     }
                 }
                 if(friendRequesterPetsList.size() == 0) {
-                    textViewFriendsRequest.setText("No friend requests yet!");
+                    textViewFriendsRequest.setText("No new friend requests!");
                 }
 //                friendRequesterAdapter = new MyPetsAdapter(friendRequesterPetsList, FriendRequestsScreen.this);
 //                requesterRecyclerView.setAdapter(friendRequesterAdapter);
@@ -147,5 +147,9 @@ public class FriendRequestsScreen extends AppCompatActivity {
             }
         });
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
+    }
+
+    public void cancelRequestPage(View view) {
+        this.finish();
     }
 }

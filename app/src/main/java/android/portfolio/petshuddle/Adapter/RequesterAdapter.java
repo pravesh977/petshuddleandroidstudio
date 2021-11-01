@@ -4,6 +4,7 @@ package android.portfolio.petshuddle.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.portfolio.petshuddle.Entity.Friend;
 import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.R;
@@ -91,10 +92,12 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
                 String url ="http://10.0.2.2:8080/api/friendslist";
 
                 JSONObject friendJson = new JSONObject();
+
                 try {
                     friendJson.put("petId", petId);
                     friendJson.put("friendId", currentPetPosition.getPetId());
                     friendJson.put("requestStatus", 'a');
+//                    Friend updatableFriend = new Friend(petId, currentPetPosition.getPetId());
                 } catch(JSONException ex) {
                     ex.printStackTrace();
                 }
@@ -102,9 +105,21 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, friendJson, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        //making the accept button disabled and changing its background to grey after add successful
                         requestAcceptButton.setEnabled(false);
                         requestAcceptButton.setBackgroundColor(Color.parseColor("#D3D9E4"));
                         Snackbar.make(requesterNameTextView, currentPetPosition.getPetName() + " has been added as your friend!", Snackbar.LENGTH_LONG).show();
+
+                        try {
+                            int petId = response.getInt("petId");
+                            int friendId = response.getInt("friendId");
+//                            String requestStatus = response.getString("responseStatus");
+                            Friend updatableFriend = new Friend(petId, friendId);
+                            changeRequestersStatus(updatableFriend);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+//                        changeRequestersStatus(friendJson);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -132,6 +147,49 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
 
         // then return the recyclable view
         return currentItemView;
+    }
+
+    public void changeRequestersStatus(Friend updatableFriend) {
+
+        String url ="http://10.0.2.2:8080/api/friendslist/friendid/";
+
+        int petId = updatableFriend.getPetId();
+        int friendId = updatableFriend.getFriendId();
+        char requestStatus = 'a';
+
+        JSONObject friendJson = new JSONObject();
+        try {
+            friendJson.put("petId", petId);
+            friendJson.put("friendId", friendId);
+            friendJson.put("requestStatus", requestStatus);
+        } catch(JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url + petId + "/petid/" + friendId, friendJson, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                int statusCode = response.statusCode;
+                if(statusCode == 200) {
+                    Log.i("updated requester", "requester udpated");
+                }
+                else {
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+
+        MySingletonRequestQueue.getInstance(getContext()).addToRequestQueue(request);
     }
 
 }
