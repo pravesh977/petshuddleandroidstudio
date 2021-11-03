@@ -26,9 +26,9 @@
         <entry key="app/src/main/res/layout/dialog_pet_for_event.xml" value="0.1956140350877193" />
         <entry key="app/src/main/res/layout/event_item.xml" value="0.2149122807017544" />
         <entry key="app/src/main/res/layout/fragment_event.xml" value="0.17149122807017544" />
-        <entry key="app/src/main/res/layout/fragment_my_pets.xml" value="0.1355263157894737" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_user_profile.xml" value="0.18020833333333333" />
+        <entry key="app/src/main/res/layout/fragment_my_pets.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.1675438596491228" />
+        <entry key="app/src/main/res/layout/fragment_user_profile.xml" value="0.1" />
         <entry key="app/src/main/res/layout/pet_item.xml" value="0.1850877192982456" />
         <entry key="app/src/main/res/layout/requester_item.xml" value="0.165" />
         <entry key="app/src/main/res/layout/spinner_text_file.xml" value="0.11140350877192982" />

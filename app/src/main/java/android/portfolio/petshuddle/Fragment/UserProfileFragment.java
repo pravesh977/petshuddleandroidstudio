@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.portfolio.petshuddle.R;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +47,7 @@ public class UserProfileFragment extends Fragment {
     private String mParam2;
 
     private FirebaseAuth mAuth;
-    private String userName;
     private DatabaseReference databaseReference;
-
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -108,6 +107,10 @@ public class UserProfileFragment extends Fragment {
         TextView userEmailTextView = view.findViewById(R.id.userEmailTextView);
         TextView userIdTextView = view.findViewById(R.id.userIdTextView);
         Button reportButton = view.findViewById(R.id.reportButton);
+        ProgressBar userProfileProgressBar = view.findViewById(R.id.userProfileProgressBar);
+
+        userProfileProgressBar.setVisibility(View.VISIBLE);
+
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,6 +128,7 @@ public class UserProfileFragment extends Fragment {
                 if(userProfile != null) {
                     String fullName = userProfile.getFullName();
                     userNameTextView.setText(fullName);
+                    userProfileProgressBar.setVisibility(View.INVISIBLE);
                 }
 //                String fullName = snapshot.getValue(String.class);
 //                userIdTextView.setText(fullName);

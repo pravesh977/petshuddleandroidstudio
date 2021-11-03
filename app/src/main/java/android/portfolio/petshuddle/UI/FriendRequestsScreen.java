@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ public class FriendRequestsScreen extends AppCompatActivity {
 //    private MyPetsAdapter friendRequesterAdapter;
 //    private RecyclerView requesterRecyclerView;
     private ListView requesterListView;
+    private ProgressBar requestProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +52,21 @@ public class FriendRequestsScreen extends AppCompatActivity {
         textViewFriendsRequest = findViewById(R.id.textViewFriendsRequest);
 //        requesterRecyclerView = findViewById(R.id.requesterRecyclerView);
         requesterListView = findViewById(R.id.requesterListView);
+        requestProgressBar = findViewById(R.id.requestProgressBar);
+
+        requestProgressBar.setVisibility(View.VISIBLE);
 
         int petId = getIntent().getIntExtra("petId", -1);
         //getting a list of friend requests that are not yet accepted for current pet using its id
         String url = "http://10.0.2.2:8080/api/friendslist/friendrequests/";
-        Log.i("this pet is : ", String.valueOf(petId));
+//        Log.i("this pet is : ", String.valueOf(petId));
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + petId, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+
+                requestProgressBar.setVisibility(View.INVISIBLE);
+
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject reqobject = response.getJSONObject(i);

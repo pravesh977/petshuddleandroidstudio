@@ -122,4 +122,9 @@ public class RegistrationScreen extends AppCompatActivity {
                     }
                 });
     }
+
+    protected void onStart() {
+        super.onStart();
+        registerProgressBar.setVisibility(View.INVISIBLE);
+    }
 }

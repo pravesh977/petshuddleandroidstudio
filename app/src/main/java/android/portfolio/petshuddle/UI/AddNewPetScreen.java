@@ -152,7 +152,7 @@ public class AddNewPetScreen extends AppCompatActivity {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;
-                Log.i("statuscode", String.valueOf(statusCode));
+//                Log.i("statuscode", String.valueOf(statusCode));
                 if(statusCode == 201) {
                     finish();
                 }

@@ -21,7 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.portfolio.petshuddle.R;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -47,13 +50,15 @@ import java.util.List;
 public class SearchFragment extends Fragment {
 
     private Spinner searchSpinner;
-    private SearchView mySearchView;
     private String searchString;
-//    private List<Event> searchedEventsList = new ArrayList<>();
+    //    private List<Event> searchedEventsList = new ArrayList<>();
 //    private MyPetsAdapter myPetsAdapter;
 //    private EventsAdapter eventsAdapter;
     private LinearLayout searchLinearLayout;
     private RecyclerView searchRecyclerView;
+    private EditText searchTextView;
+    private Button searchButton;
+    private ProgressBar searchProgressBar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -115,127 +120,212 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 //        coordinatorLay = view.findViewById(R.id.coordinatorLay);
         searchSpinner = view.findViewById(R.id.searchSpinner);
-        mySearchView = view.findViewById(R.id.mySearchView);
+        searchTextView = view.findViewById(R.id.searchTextView);
+        searchButton = view.findViewById(R.id.searchButton);
         searchLinearLayout = view.findViewById(R.id.searchLinearLayout);
         searchRecyclerView = view.findViewById(R.id.searchRecyclerView);
-        mySearchView.setSubmitButtonEnabled(true);
+        searchProgressBar = view.findViewById(R.id.searchProgressBar);
+
         String[] searchStringArray = {"Events", "Pets"};
         ArrayAdapter<String> searchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, searchStringArray);
         searchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         searchSpinner.setAdapter(searchAdapter);
-        mySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-//                Log.i("query is : ", query);
-//                Toast.makeText(getActivity(), "searched " + query, Toast.LENGTH_LONG).show();
-                querySubmit(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String query) {
-                return false;
+            public void onClick(View view) {
+                querySubmit(searchTextView.getText().toString());
             }
         });
     }
 
-//    handle search submit
+    //    handle search submit
     public void querySubmit(String query) {
-//        Log.i("query is : ", query);
-//        Toast.makeText(getActivity(), "searched " + query, Toast.LENGTH_LONG).show();
 
+        searchProgressBar.setVisibility(View.VISIBLE);
         String spinnerValue = searchSpinner.getSelectedItem().toString();
-        if(spinnerValue.equals("Pets")) {
+        if (spinnerValue.equals("Pets")) {
 
 //            RecyclerView searchedPetsRecyclerView = new RecyclerView(getActivity());
 //            searchedPetsRecyclerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             List<Pet> searchedPetsList = new ArrayList<>();
 
-//            searchedPetsList.clear();
-            String url = "http://10.0.2.2:8080/api/petshuddle/searchpets/";
+            if (query.equals("")) {
 
-            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject reqobject = response.getJSONObject(i);
-                            int petId = reqobject.getInt("petId");
-                            String petName = reqobject.getString("petName");
-                            String species = reqobject.getString("species");
-                            String sex = reqobject.getString("sex");
-                            String breed = reqobject.getString("breed");
-                            int age = reqobject.getInt("age");
-                            String petDescription = reqobject.getString("petDescription");
-                            String userId = reqobject.getString("userId");
+                String url = "http://10.0.2.2:8080/api/petshuddle";
+
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        searchProgressBar.setVisibility(View.INVISIBLE);
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject reqobject = response.getJSONObject(i);
+                                int petId = reqobject.getInt("petId");
+                                String petName = reqobject.getString("petName");
+                                String species = reqobject.getString("species");
+                                String sex = reqobject.getString("sex");
+                                String breed = reqobject.getString("breed");
+                                int age = reqobject.getInt("age");
+                                String petDescription = reqobject.getString("petDescription");
+                                String userId = reqobject.getString("userId");
 //                        Log.i("petName : ", petName);
 //                        Log.i("Description", petDescription);
-                            Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
-                            searchedPetsList.add(jsonPet);
+                                Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
+                                searchedPetsList.add(jsonPet);
 //                        Log.i("petname is: ", jsonPet.getPetName());
 //                        Log.i("pets list increment: ", String.valueOf(myPetsList.size()));
 
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    if(searchedPetsList.size() == 0) {
-                        Snackbar.make(searchRecyclerView, "Could not find any Pet with name " + query, Snackbar.LENGTH_LONG).show();
-                    }
+                        if (searchedPetsList.size() == 0) {
+                            Snackbar.make(searchRecyclerView, "Could not find any Pet with name " + query, Snackbar.LENGTH_LONG).show();
+                        }
                         MyPetsAdapter myPetsAdapter = new MyPetsAdapter(searchedPetsList, getContext());
                         searchRecyclerView.setAdapter(myPetsAdapter);
                         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-            MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
-        }
-        else {
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
+
+            } else {
+                //            searchedPetsList.clear();
+                String url = "http://10.0.2.2:8080/api/petshuddle/searchpets/";
+
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        searchProgressBar.setVisibility(View.INVISIBLE);
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject reqobject = response.getJSONObject(i);
+                                int petId = reqobject.getInt("petId");
+                                String petName = reqobject.getString("petName");
+                                String species = reqobject.getString("species");
+                                String sex = reqobject.getString("sex");
+                                String breed = reqobject.getString("breed");
+                                int age = reqobject.getInt("age");
+                                String petDescription = reqobject.getString("petDescription");
+                                String userId = reqobject.getString("userId");
+//                        Log.i("petName : ", petName);
+//                        Log.i("Description", petDescription);
+                                Pet jsonPet = new Pet(petId, petName, species, sex, breed, age, petDescription, userId);
+                                searchedPetsList.add(jsonPet);
+//                        Log.i("petname is: ", jsonPet.getPetName());
+//                        Log.i("pets list increment: ", String.valueOf(myPetsList.size()));
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (searchedPetsList.size() == 0) {
+                            Snackbar.make(searchRecyclerView, "Could not find any Pet with name " + query, Snackbar.LENGTH_LONG).show();
+                        }
+                        MyPetsAdapter myPetsAdapter = new MyPetsAdapter(searchedPetsList, getContext());
+                        searchRecyclerView.setAdapter(myPetsAdapter);
+                        searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
+            }
+        } else {
 //            Toast.makeText(getActivity(), spinnerValue + " " + query, Toast.LENGTH_LONG).show();
             List<Event> searchedEventsList = new ArrayList<>();
-            String url = "http://10.0.2.2:8080/api/events/searchevents/";
 
-            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
 
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject reqobject = response.getJSONObject(i);
-                            int eventId = reqobject.getInt("eventId");
-                            String eventTitle = reqobject.getString("eventTitle");
-                            String eventDetails = reqobject.getString("eventDetails");
-                            String eventLocation = reqobject.getString("eventLocation");
-                            String eventDate = reqobject.getString("eventDate");
-                            String userId = reqobject.getString("userId");
-                            JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
+            if (query.equals("")) {
+                String url = "http://10.0.2.2:8080/api/events";
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        searchProgressBar.setVisibility(View.INVISIBLE);
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject reqobject = response.getJSONObject(i);
+                                int eventId = reqobject.getInt("eventId");
+                                String eventTitle = reqobject.getString("eventTitle");
+                                String eventDetails = reqobject.getString("eventDetails");
+                                String eventLocation = reqobject.getString("eventLocation");
+                                String eventDate = reqobject.getString("eventDate");
+                                String userId = reqobject.getString("userId");
+                                JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
 //                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
-                            Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
-                            searchedEventsList.add(responseEvent);
+                                Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
+                                searchedEventsList.add(responseEvent);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    if(searchedEventsList.size() == 0) {
-                        Snackbar.make(searchRecyclerView, "Could not find any Event with title " + query, Snackbar.LENGTH_LONG).show();
-                    }
+                        if (searchedEventsList.size() == 0) {
+                            Snackbar.make(searchRecyclerView, "Could not find any Event with title " + query, Snackbar.LENGTH_LONG).show();
+                        }
                         EventsAdapter eventsAdapter = new EventsAdapter(searchedEventsList, getContext());
                         searchRecyclerView.setAdapter(eventsAdapter);
                         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-            MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
+            } else {
+                String url = "http://10.0.2.2:8080/api/events/searchevents/";
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        searchProgressBar.setVisibility(View.INVISIBLE);
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject reqobject = response.getJSONObject(i);
+                                int eventId = reqobject.getInt("eventId");
+                                String eventTitle = reqobject.getString("eventTitle");
+                                String eventDetails = reqobject.getString("eventDetails");
+                                String eventLocation = reqobject.getString("eventLocation");
+                                String eventDate = reqobject.getString("eventDate");
+                                String userId = reqobject.getString("userId");
+                                JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
+//                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
+                                Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
+                                searchedEventsList.add(responseEvent);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (searchedEventsList.size() == 0) {
+                            Snackbar.make(searchRecyclerView, "Could not find any Event with title " + query, Snackbar.LENGTH_LONG).show();
+                        }
+                        EventsAdapter eventsAdapter = new EventsAdapter(searchedEventsList, getContext());
+                        searchRecyclerView.setAdapter(eventsAdapter);
+                        searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
+            }
+
         }
     }
 

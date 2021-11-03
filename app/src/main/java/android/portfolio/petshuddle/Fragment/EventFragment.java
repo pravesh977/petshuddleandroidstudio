@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.portfolio.petshuddle.R;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -67,6 +68,7 @@ public class EventFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private String currentUserId;
+    private ProgressBar eventProgressBar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -126,6 +128,8 @@ public class EventFragment extends Fragment {
         eventsRecyclerView = view.findViewById(R.id.eventsRecyclerView);
         floatingActionButtonEvent = view.findViewById(R.id.floatingActionButtonEvent);
         newEventScreenButton = view.findViewById(R.id.newEventScreenButton);
+        eventProgressBar = view.findViewById(R.id.eventProgressBar);
+
         floatingActionButtonEvent.setOnClickListener(toggleAddEventDisplay);
         newEventScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,6 +201,7 @@ public class EventFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        eventProgressBar.setVisibility(View.INVISIBLE);
         eventList.clear();
 
         String url = "http://10.0.2.2:8080/api/events/";
@@ -204,6 +209,7 @@ public class EventFragment extends Fragment {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                eventProgressBar.setVisibility(View.INVISIBLE);
 
                 for (int i = 0; i < response.length(); i++) {
                     try {
@@ -265,22 +271,7 @@ public class EventFragment extends Fragment {
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
                 }
-            }) {
-//            @Override
-//            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-//                int statusCode = response.statusCode;
-////                Log.i("statuscode", String.valueOf(statusCode));
-//                if(statusCode == 200) {
-//                    Log.i("deletedevent", "event delete successful");
-//                }
-//                else {
-//                    Log.i("failedaddpet", response.toString());
-//                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
-//                }
-//                return super.parseNetworkResponse(response);
-//            }
-            };
-
+            });
 
             MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
             return true;

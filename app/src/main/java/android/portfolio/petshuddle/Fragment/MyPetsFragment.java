@@ -3,6 +3,8 @@ package android.portfolio.petshuddle.Fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,27 +14,33 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.portfolio.petshuddle.Adapter.MyPetsAdapter;
 import android.portfolio.petshuddle.Alerter.Alerter;
 import android.portfolio.petshuddle.Entity.Pet;
 import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.UI.AddNewPetScreen;
 import android.portfolio.petshuddle.UI.MainTabbedActivity;
+import android.portfolio.petshuddle.UI.SingleEventScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.portfolio.petshuddle.R;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -71,7 +79,7 @@ public class MyPetsFragment extends Fragment {
     List<Pet> myPetsList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
+    private ProgressBar myPetsProgressBar;
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -121,6 +129,8 @@ public class MyPetsFragment extends Fragment {
 
         myPetsRecyclerView = view.findViewById(R.id.myPetsRecyclerView);
         floatingActionButtonPet = view.findViewById(R.id.floatingActionButtonPet);
+        myPetsProgressBar = view.findViewById(R.id.myPetsProgressBar);
+
         floatingActionButtonPet.setOnClickListener(toggleAddPetButton);
 
         addPetButton = view.findViewById(R.id.addPetButton);
@@ -141,6 +151,7 @@ public class MyPetsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         myPetsList.clear();
+        myPetsProgressBar.setVisibility(View.VISIBLE);
 //        List<Pet> myPetsList = new ArrayList<>();
 //        final MyPetsAdapter myPetsAdapter;
 //        Log.i("activitystarted", "activity has started");
@@ -153,6 +164,7 @@ public class MyPetsFragment extends Fragment {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + currentUser.getUid(), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                myPetsProgressBar.setVisibility(View.INVISIBLE);
 //                myPetsTextView.setText(response.toString());
 
                 //for loop works to get each name
@@ -205,7 +217,7 @@ public class MyPetsFragment extends Fragment {
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                Log.i("moved", "it is moving");
+//                Log.i("moved", "it is moving");
                 return true;
             }
 
@@ -220,17 +232,9 @@ public class MyPetsFragment extends Fragment {
                         int position = viewHolder.getAdapterPosition();
 //                myPetsList.remove(position);
                         Pet currentPet = myPetsList.get(position);
-                        handleDeletePet(currentPet.getPetId());
-                        myPetsList.remove(currentPet);
-                        myPetsAdapter.notifyItemRemoved(position); //out of bounds
-//                        Toast.makeText(getContext(), "Pet Deleted", Toast.LENGTH_LONG).show();
-                        Snackbar.make(myPetsRecyclerView,"Deleted Pet " + currentPet.getPetName(), Snackbar.LENGTH_LONG).show();
 
-//                myPetsAdapter.notifyDataSetChanged();
-                        //myPetsAdapter.notifyDataSetChanged();
-                        //Log.i("swiped", "swiped for start");
-//                        Log.i("arraysizeafterdelete : ", String.valueOf(myPetsList.size()));
-//                        Log.i("arrayadaptersize", String.valueOf(myPetsAdapter.getItemCount()));
+                        handleDeletePet(currentPet, position);
+
                     }
                 });
                 aBuilder.setNegativeButton("Nope", new DialogInterface.OnClickListener() {
@@ -253,26 +257,70 @@ public class MyPetsFragment extends Fragment {
                 deleteDialog.show();
             }
         }).attachToRecyclerView(myPetsRecyclerView);
+//        myPetsProgressBar.setVisibility(View.INVISIBLE);
+
     }
 
-    public void handleDeletePet(int deletePetId) {
+    public void handleDeletePet(Pet currentPet, int position) {
 
         String url = "http://10.0.2.2:8080/api/petshuddle/";
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url + deletePetId, null, new Response.Listener<JSONObject>() {
+        StringRequest request = new StringRequest(Request.Method.DELETE, url + currentPet.getPetId(), new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-//                Log.i("responsedelete", response.toString());
-//                Toast.makeText(getContext(), "Pet Deleted", Toast.LENGTH_LONG).show();
+            public void onResponse(String response) {
+//                Log.i("string reponse ", response.toString());
+//                if(response.toString().equals("Pet deleted")) {
+//                    myPetsList.remove(currentPet);
+//                    myPetsAdapter.notifyItemRemoved(position);
+//                    Snackbar.make(myPetsRecyclerView, "Deleted Pet " + currentPet.getPetName(), Snackbar.LENGTH_LONG).show();
+//                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+//                Log.i("WTF HAPPENED", "WTF WTF");
                 error.printStackTrace();
+//                Log.i("volley status code ", String.valueOf(error.networkResponse.statusCode));
+                if(error.networkResponse.statusCode == 403) {
+                    Snackbar.make(myPetsRecyclerView, "Cannot delete " + currentPet.getPetName() + ". It has either joined Events or has requested friendship with another pet.", Snackbar.LENGTH_LONG).show();
+                    myPetsAdapter.notifyItemChanged(position);
+                }
             }
-        });
+        }){
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+//                int statusCode = response.statusCode;
+//                Log.i("status code is ", String.valueOf(statusCode));
+//                if(response != null) {
+//                }
+
+                if(response.statusCode == 200) {
+                    //updating the view is impossible from worker thread so need to do this or runOnUiThread for the activity
+//                    new Handler(Looper.getMainLooper()).post(new Runnable(){
+//                        @Override
+//                        public void run() {
+//                            myPetsList.remove(currentPet);
+//                            myPetsAdapter.notifyItemRemoved(position);
+//                            Snackbar.make(myPetsRecyclerView, "Deleted Pet " + currentPet.getPetName(), Snackbar.LENGTH_LONG).show();
+//                        }
+//                    });
+
+                    //updating the view by removing the item from list, notifying adapter in the main UI thread
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            myPetsList.remove(currentPet);
+                            myPetsAdapter.notifyItemRemoved(position);
+                            Snackbar.make(myPetsRecyclerView, "Deleted Pet " + currentPet.getPetName(), Snackbar.LENGTH_LONG).show();
+                        }
+                    });
 
 
+                }
+                return super.parseNetworkResponse(response);
+            }
+
+        };
         MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
 
     }
@@ -304,9 +352,4 @@ public class MyPetsFragment extends Fragment {
         myPetsAdapter.notifyDataSetChanged();
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Snackbar.make(myPetsRecyclerView,"this is pets snackbar", Snackbar.LENGTH_LONG).show();
-//    }
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class ReportScreen extends AppCompatActivity {
     private Spinner monthlySpinner;
     private TextView textViewNumberOfEvents;
     private TextView textViewNumberOfPets;
+    private ProgressBar reportProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class ReportScreen extends AppCompatActivity {
         monthlySpinner = findViewById(R.id.monthlySpinner);
         textViewNumberOfEvents = findViewById(R.id.textViewNumberOfEvents);
         textViewNumberOfPets = findViewById(R.id.textViewNumberOfPets);
+        reportProgressBar = findViewById(R.id.reportProgressBar);
 
         String monthsArray[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         ArrayAdapter<String> monthsAdapter = new ArrayAdapter<>(this, R.layout.spinner_text_file, monthsArray);
@@ -48,12 +51,14 @@ public class ReportScreen extends AppCompatActivity {
     public View.OnClickListener handleGenerateReport = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            reportProgressBar.setVisibility(View.VISIBLE);
             String selectedMonth = monthlySpinner.getSelectedItem().toString();
             String url = "http://10.0.2.2:8080/api/events/eventsbymonth/";
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + selectedMonth, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    reportProgressBar.setVisibility(View.INVISIBLE);
 //                Log.i("responseReport", response.toString());
 //                Toast.makeText(getContext(), "Pet Deleted", Toast.LENGTH_LONG).show();
                     try {

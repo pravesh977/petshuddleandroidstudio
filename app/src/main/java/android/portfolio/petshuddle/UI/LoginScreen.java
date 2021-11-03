@@ -109,4 +109,10 @@ public class LoginScreen extends AppCompatActivity {
                     }
                 });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loginProgressBar.setVisibility(View.INVISIBLE);
+    }
 }

@@ -392,7 +392,6 @@ public class SinglePetScreen extends AppCompatActivity {
             });
             myPetChooserDialog.show();
             addFriendButton.setVisibility(View.INVISIBLE);
-            friendRequestButton.setVisibility(View.INVISIBLE);
         }
     };
 
