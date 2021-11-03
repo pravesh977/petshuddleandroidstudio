@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -58,8 +59,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SingleEventScreen extends AppCompatActivity {
 
@@ -133,7 +136,7 @@ public class SingleEventScreen extends AppCompatActivity {
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hi, check out this event!" + "\n" + eventTitle + "\n" + "Details: " + eventDetails + "\n" + "Time: " +eventDateTimeString);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hi, check out this event!" + "\n" + eventTitle + "\n" + "Details: " + eventDetails + "\n" + "Time: " + eventDateTimeString);
                 sendIntent.setType("text/plain");
 
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
@@ -238,11 +241,19 @@ public class SingleEventScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+        };
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
 
-        if(currentUserId.equals(userId)) {
+        if (currentUserId.equals(userId)) {
             startEditPetButton.setVisibility(View.VISIBLE);
             saveEditPetButton.setVisibility(View.VISIBLE);
         } else {
@@ -335,6 +346,15 @@ public class SingleEventScreen extends AppCompatActivity {
                 Toast.makeText(SingleEventScreen.this, "Something went wrong: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;
@@ -429,7 +449,15 @@ public class SingleEventScreen extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("petsapiheader977", "petsapikey977");
+                    return headers;
+                }
+            };
 
             MySingletonRequestQueue.getInstance(SingleEventScreen.this).addToRequestQueue(request);
 
@@ -492,6 +520,14 @@ public class SingleEventScreen extends AppCompatActivity {
             }
         }) {
             @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+
+            @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;
                 if (statusCode == 200) {
@@ -529,7 +565,7 @@ public class SingleEventScreen extends AppCompatActivity {
 //            Log.i("zdt ", zdt.toString());
 
             PendingIntent sender = PendingIntent.getBroadcast(SingleEventScreen.this, 0, intent, 0);
-            AlarmManager eventAlarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            AlarmManager eventAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             eventAlarmManager.set(AlarmManager.RTC_WAKEUP, beforeThreeHours, sender);
 //            Log.i("myzone ", ZoneId.systemDefault().toString());
 //            Log.i("mytime ", ZonedDateTime.now().toString());

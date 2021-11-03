@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class StringToDateTimeConverter {
-    public static Calendar stringToCalendar(String givenDateTime){
+    public static Calendar stringToCalendar(String givenDateTime) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         try {

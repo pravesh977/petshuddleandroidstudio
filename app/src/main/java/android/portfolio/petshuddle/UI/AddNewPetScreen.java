@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,11 +35,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddNewPetScreen extends AppCompatActivity {
 
     private EditText addTextPetName;
-//    private EditText addTextPetSpecies;
+    //    private EditText addTextPetSpecies;
     private EditText addTextPetBreed;
     private EditText addTextPetAge;
     private EditText addTextPetDescription;
@@ -90,7 +93,7 @@ public class AddNewPetScreen extends AppCompatActivity {
 
         //Pet newPet = new Pet(0, petName, species, sex, breed, Integer.parseInt(age), description, currentUserId);
 
-        if(petName.isEmpty()) {
+        if (petName.isEmpty()) {
             addTextPetName.setError("Name can't be empty");
             addTextPetName.requestFocus();
             return;
@@ -105,17 +108,17 @@ public class AddNewPetScreen extends AppCompatActivity {
 //            petGenderSpinner.requestFocus();
 //            return;
 //        }
-        if(breed.isEmpty()) {
+        if (breed.isEmpty()) {
             addTextPetBreed.setError("Breed can't be empty");
             addTextPetBreed.requestFocus();
             return;
         }
-        if(age.isEmpty()) {
+        if (age.isEmpty()) {
             addTextPetAge.setError("Age can't be empty");
             addTextPetAge.requestFocus();
             return;
         }
-        if(description.isEmpty()) {
+        if (description.isEmpty()) {
             addTextPetDescription.setError("Description can't be empty");
             addTextPetDescription.requestFocus();
             return;
@@ -123,7 +126,7 @@ public class AddNewPetScreen extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         //RequestQueue queue = MySingletonRequestQueue.getInstance(this).getRequestQueue();
-        String url ="http://10.0.2.2:8080/api/petshuddle";
+        String url = "http://10.0.2.2:8080/api/petshuddle";
 
         JSONObject petJson = new JSONObject();
         try {
@@ -134,29 +137,41 @@ public class AddNewPetScreen extends AppCompatActivity {
             petJson.put("age", age);
             petJson.put("petDescription", description);
             petJson.put("userId", currentUserId);
-        } catch(JSONException ex) {
+        } catch (JSONException ex) {
             ex.printStackTrace();
         }
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, petJson, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                }
+            }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(AddNewPetScreen.this, "Something went wrong: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
-        }){
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+
+            }
+
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;
 //                Log.i("statuscode", String.valueOf(statusCode));
-                if(statusCode == 201) {
+                if (statusCode == 201) {
                     finish();
-                }
-                else {
+                } else {
                     Log.i("failedaddpet", "cant add this");
                     Toast.makeText(AddNewPetScreen.this, "Adding failed: ", Toast.LENGTH_LONG).show();
                 }

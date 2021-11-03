@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -44,8 +45,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class AddNewEventScreen extends AppCompatActivity {
 
@@ -96,15 +99,15 @@ public class AddNewEventScreen extends AppCompatActivity {
         }
     };
 
-    public void openDatePickerForEvent(LocalDate givenLocalDate){
+    public void openDatePickerForEvent(LocalDate givenLocalDate) {
 
         DatePickerDialog eventDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                AddNewEventScreen.this.textViewEventDate.setText(year + "-"+ (month+1) + "-" + day);
+                AddNewEventScreen.this.textViewEventDate.setText(year + "-" + (month + 1) + "-" + day);
             }
-        }, givenLocalDate.getYear(), givenLocalDate.getMonthValue()-1, givenLocalDate.getDayOfMonth());
+        }, givenLocalDate.getYear(), givenLocalDate.getMonthValue() - 1, givenLocalDate.getDayOfMonth());
         Log.i("thismonth", String.valueOf(givenLocalDate.getMonthValue()));
         eventDateDialog.show();
     }
@@ -153,33 +156,33 @@ public class AddNewEventScreen extends AppCompatActivity {
 //        Log.i("eventcreated", newEvent.getEventDate());
 //        Log.i("eventcre", newEvent.getEventDetails());
 
-        if(title.isEmpty()) {
+        if (title.isEmpty()) {
             editTextEventTitle.setError("Title can't be empty");
             editTextEventTitle.requestFocus();
             return;
         }
-        if(details.isEmpty()) {
+        if (details.isEmpty()) {
             editTextEventDetails.setError("Details can't be empty");
             editTextEventDetails.requestFocus();
             return;
         }
-        if(location.isEmpty()) {
+        if (location.isEmpty()) {
             editTextEventLocation.setError("Location can't be empty");
             editTextEventLocation.requestFocus();
             return;
         }
-        if(date.isEmpty()) {
+        if (date.isEmpty()) {
             textViewEventDate.setError("Please check date");
             textViewEventDate.requestFocus();
             return;
         }
-        if(time.isEmpty()) {
+        if (time.isEmpty()) {
             textViewEventTime.setError("Please check time");
             textViewEventTime.requestFocus();
             return;
         }
 
-        String url ="http://10.0.2.2:8080/api/events";
+        String url = "http://10.0.2.2:8080/api/events";
 
         JSONObject eventJson = new JSONObject();
         try {
@@ -188,7 +191,7 @@ public class AddNewEventScreen extends AppCompatActivity {
             eventJson.put("eventLocation", location);
             eventJson.put("eventDate", dateTime);
             eventJson.put("userId", currentUserId);
-        } catch(JSONException ex) {
+        } catch (JSONException ex) {
             ex.printStackTrace();
         }
 
@@ -202,16 +205,22 @@ public class AddNewEventScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        })
-        {
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;
 //                Log.i("codeis", String.valueOf(statusCode));
-                if(statusCode == 201) {
+                if (statusCode == 201) {
                     finish();
-                }
-                else {
+                } else {
                     Toast.makeText(AddNewEventScreen.this, "Adding failed: ", Toast.LENGTH_LONG).show();
                 }
                 return super.parseNetworkResponse(response);

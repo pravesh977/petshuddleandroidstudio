@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -32,14 +33,16 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FriendRequestsScreen extends AppCompatActivity {
 
     List<Integer> requestIdList = new ArrayList<>();
     List<Pet> friendRequesterPetsList = new ArrayList<>();
     private TextView textViewFriendsRequest;
-//    private MyPetsAdapter friendRequesterAdapter;
+    //    private MyPetsAdapter friendRequesterAdapter;
 //    private RecyclerView requesterRecyclerView;
     private ListView requesterListView;
     private ProgressBar requestProgressBar;
@@ -92,7 +95,15 @@ public class FriendRequestsScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+        };
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
@@ -130,7 +141,7 @@ public class FriendRequestsScreen extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                if(friendRequesterPetsList.size() == 0) {
+                if (friendRequesterPetsList.size() == 0) {
                     textViewFriendsRequest.setText("No new friend requests!");
                 }
 //                friendRequesterAdapter = new MyPetsAdapter(friendRequesterPetsList, FriendRequestsScreen.this);
@@ -153,7 +164,15 @@ public class FriendRequestsScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+        };
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
 

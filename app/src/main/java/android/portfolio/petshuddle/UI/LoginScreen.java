@@ -68,22 +68,22 @@ public class LoginScreen extends AppCompatActivity {
         String password = loginPasswordEditText.getText().toString().trim();
         //Log.i("emailpass", email + " " + password);
 
-        if(email.isEmpty()) {
+        if (email.isEmpty()) {
             loginEmailEditText.setError("Email can't be empty");
             loginEmailEditText.requestFocus();
             return;
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             loginEmailEditText.setError("Enter Valid Email");
             loginEmailEditText.requestFocus();
             return;
         }
-        if(password.isEmpty()) {
+        if (password.isEmpty()) {
             loginPasswordEditText.setError("Password can't be empty");
             loginPasswordEditText.requestFocus();
             return;
         }
-        if(password.length() < 6) {
+        if (password.length() < 6) {
             loginPasswordEditText.setError("Password needs to be longer than 6 letters");
             loginPasswordEditText.requestFocus();
             return;

@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -49,8 +50,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -165,7 +168,7 @@ public class EventFragment extends Fragment {
                         int position = viewHolder.getAdapterPosition();
                         Event currentEvent = eventList.get(position);
                         Boolean checkDeleteAuthority = handleDeleteEvent(currentEvent.getEventId(), currentEvent.getUserId());
-                        if(checkDeleteAuthority == true) {
+                        if (checkDeleteAuthority == true) {
                             eventList.remove(currentEvent);
                             eventsAdapter.notifyItemRemoved(position);
                             Snackbar.make(eventsRecyclerView, "Deleted Event " + currentEvent.getEventTitle(), Snackbar.LENGTH_LONG).show();
@@ -201,7 +204,7 @@ public class EventFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        eventProgressBar.setVisibility(View.INVISIBLE);
+        eventProgressBar.setVisibility(View.VISIBLE);
         eventList.clear();
 
         String url = "http://10.0.2.2:8080/api/events/";
@@ -221,8 +224,9 @@ public class EventFragment extends Fragment {
                         String eventDate = reqobject.getString("eventDate");
                         String userId = reqobject.getString("userId");
                         JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
-//                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
-                        Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
+//                        Log.i("length of pets attendees: ", String.valueOf(petJsonArray.length()));
+                        int numberOfEventAttendees = petJsonArray.length();
+                        Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId, numberOfEventAttendees);
                         eventList.add(responseEvent);
 
                     } catch (JSONException e) {
@@ -238,7 +242,15 @@ public class EventFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+        };
 
         MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
 
@@ -246,7 +258,7 @@ public class EventFragment extends Fragment {
 
     public boolean handleDeleteEvent(int deleteEventId, String userId) {
 
-        if(currentUserId.equals(userId)) {
+        if (currentUserId.equals(userId)) {
 
             String url = "http://10.0.2.2:8080/api/events/";
 
@@ -271,7 +283,15 @@ public class EventFragment extends Fragment {
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("petsapiheader977", "petsapikey977");
+                    return headers;
+                }
+            };
 
             MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
             return true;
@@ -285,12 +305,11 @@ public class EventFragment extends Fragment {
     public View.OnClickListener toggleAddEventDisplay = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(isButtonVisible == false) {
+            if (isButtonVisible == false) {
                 newEventScreenButton.setVisibility(View.VISIBLE);
 //                Log.i("buttonvisibility", "button isi visible");
                 isButtonVisible = true;
-            }
-            else {
+            } else {
                 newEventScreenButton.setVisibility(View.GONE);
 //                Log.i("buttonvisibility", "now invisible");
                 isButtonVisible = false;

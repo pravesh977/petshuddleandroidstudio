@@ -29,6 +29,7 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,7 +41,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -192,7 +195,15 @@ public class SearchFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                });
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("petsapiheader977", "petsapikey977");
+                        return headers;
+                    }
+                };
                 MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
 
             } else {
@@ -238,7 +249,15 @@ public class SearchFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                });
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("petsapiheader977", "petsapikey977");
+                        return headers;
+                    }
+                };
                 MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
             }
         } else {
@@ -283,7 +302,15 @@ public class SearchFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                });
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("petsapiheader977", "petsapikey977");
+                        return headers;
+                    }
+                };
                 MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
             } else {
                 String url = "http://10.0.2.2:8080/api/events/searchevents/";
@@ -322,7 +349,15 @@ public class SearchFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                });
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("petsapiheader977", "petsapikey977");
+                        return headers;
+                    }
+                };
                 MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
             }
 

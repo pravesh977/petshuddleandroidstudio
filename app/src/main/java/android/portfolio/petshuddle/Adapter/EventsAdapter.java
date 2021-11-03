@@ -26,11 +26,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         this.context = context;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView eventTitleItem;
         private TextView eventDateItem;
         private TextView eventLocationItem;
+        private TextView eventAttendeesItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -38,6 +39,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             eventTitleItem = itemView.findViewById(R.id.eventTitleItem);
             eventDateItem = itemView.findViewById(R.id.eventDateItem);
             eventLocationItem = itemView.findViewById(R.id.eventLocationItem);
+            eventAttendeesItem = itemView.findViewById(R.id.eventAttendeesItem);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -81,7 +83,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         eventDate.setText(event.getEventDate());
         TextView eventLocation = holder.eventLocationItem;
         eventLocation.setText(event.getEventLocation());
-
+        TextView eventAttendees = holder.eventAttendeesItem;
+        eventAttendees.setText(String.valueOf(event.getNumberOfPetAttendees()));
     }
 
     @Override

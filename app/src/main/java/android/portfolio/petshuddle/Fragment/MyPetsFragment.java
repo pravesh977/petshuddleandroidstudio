@@ -23,6 +23,7 @@ import android.portfolio.petshuddle.Helper.MySingletonRequestQueue;
 import android.portfolio.petshuddle.UI.AddNewPetScreen;
 import android.portfolio.petshuddle.UI.MainTabbedActivity;
 import android.portfolio.petshuddle.UI.SingleEventScreen;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -52,7 +54,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -202,7 +206,20 @@ public class MyPetsFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+
+            }
+        };
 
         MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
 
@@ -281,12 +298,27 @@ public class MyPetsFragment extends Fragment {
 //                Log.i("WTF HAPPENED", "WTF WTF");
                 error.printStackTrace();
 //                Log.i("volley status code ", String.valueOf(error.networkResponse.statusCode));
-                if(error.networkResponse.statusCode == 403) {
+                if (error.networkResponse.statusCode == 403) {
                     Snackbar.make(myPetsRecyclerView, "Cannot delete " + currentPet.getPetName() + ". It has either joined Events or has requested friendship with another pet.", Snackbar.LENGTH_LONG).show();
                     myPetsAdapter.notifyItemChanged(position);
                 }
             }
-        }){
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+
+            }
+
+
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
 //                int statusCode = response.statusCode;
@@ -294,7 +326,7 @@ public class MyPetsFragment extends Fragment {
 //                if(response != null) {
 //                }
 
-                if(response.statusCode == 200) {
+                if (response.statusCode == 200) {
                     //updating the view is impossible from worker thread so need to do this or runOnUiThread for the activity
 //                    new Handler(Looper.getMainLooper()).post(new Runnable(){
 //                        @Override
@@ -328,11 +360,10 @@ public class MyPetsFragment extends Fragment {
     private View.OnClickListener toggleAddPetButton = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(isAddButtonVisible == false) {
+            if (isAddButtonVisible == false) {
                 addPetButton.setVisibility(View.VISIBLE);
                 isAddButtonVisible = true;
-            }
-            else {
+            } else {
                 addPetButton.setVisibility(View.GONE);
                 isAddButtonVisible = false;
             }

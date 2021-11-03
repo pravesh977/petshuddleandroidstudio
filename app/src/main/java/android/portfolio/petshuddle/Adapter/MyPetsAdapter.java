@@ -15,7 +15,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.ViewHolder>{
+public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.ViewHolder> {
 
     private List<Pet> myPetsList;
     private Context context;

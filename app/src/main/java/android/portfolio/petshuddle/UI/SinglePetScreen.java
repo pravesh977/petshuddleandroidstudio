@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -43,7 +44,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SinglePetScreen extends AppCompatActivity {
 
@@ -194,7 +197,20 @@ public class SinglePetScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+
+            }
+        };
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
 
@@ -314,7 +330,20 @@ public class SinglePetScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+
+            }
+        };
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
@@ -369,7 +398,20 @@ public class SinglePetScreen extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+
+                    Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Content-Type", "application/json");
+                    headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                    return headers;
+
+                }
+            };
 
             MySingletonRequestQueue.getInstance(SinglePetScreen.this).addToRequestQueue(request);
 
@@ -402,14 +444,14 @@ public class SinglePetScreen extends AppCompatActivity {
         int friendId = getIntent().getIntExtra("petId", -1);
         char requestStatus = 'p';
 
-        String url ="http://10.0.2.2:8080/api/friendslist";
+        String url = "http://10.0.2.2:8080/api/friendslist";
 
         JSONObject friendJson = new JSONObject();
         try {
             friendJson.put("petId", myChosenPetId);
             friendJson.put("friendId", friendId);
             friendJson.put("requestStatus", requestStatus);
-        } catch(JSONException ex) {
+        } catch (JSONException ex) {
             ex.printStackTrace();
         }
 
@@ -427,16 +469,27 @@ public class SinglePetScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        })
-        {
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+
+            }
+
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;
 //                Log.i("codeis", String.valueOf(statusCode));
-                if(statusCode == 201) {
+                if (statusCode == 201) {
 
-              }
-                else {
+                } else {
                     Toast.makeText(SinglePetScreen.this, "Adding Friend Failed: ", Toast.LENGTH_LONG).show();
                 }
                 return super.parseNetworkResponse(response);
@@ -489,7 +542,7 @@ public class SinglePetScreen extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                if(friendsForPetList.size() == 0) {
+                if (friendsForPetList.size() == 0) {
                     textViewNumberOfFriends.setText("This pet has no friends yet!");
                 }
                 petFriendsAdapter = new MyPetsAdapter(friendsForPetList, SinglePetScreen.this);
@@ -508,7 +561,20 @@ public class SinglePetScreen extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> headers = new HashMap<>();
+//                String credentials = "petsapiheader977:petsapikey977";
+//                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+//                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+
+            }
+        };
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
     }
 

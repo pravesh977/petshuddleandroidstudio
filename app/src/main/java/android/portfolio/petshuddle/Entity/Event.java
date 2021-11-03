@@ -10,6 +10,7 @@ public class Event {
     private String eventLocation;
     private String eventDate;
     private String userId;
+    private int numberOfPetAttendees;
 
     public Event(int eventId, String eventTitle, String eventDetails, String eventLocation, String eventDate, String userId) {
         this.eventId = eventId;
@@ -18,6 +19,17 @@ public class Event {
         this.eventLocation = eventLocation;
         this.eventDate = eventDate;
         this.userId = userId;
+    }
+
+    //constructor with attendees for the event fragment to get the number of pet attendees
+    public Event(int eventId, String eventTitle, String eventDetails, String eventLocation, String eventDate, String userId, int numberOfPetAttendees) {
+        this.eventId = eventId;
+        this.eventTitle = eventTitle;
+        this.eventDetails = eventDetails;
+        this.eventLocation = eventLocation;
+        this.eventDate = eventDate;
+        this.userId = userId;
+        this.numberOfPetAttendees = numberOfPetAttendees;
     }
 
     public int getEventId() {
@@ -66,6 +78,14 @@ public class Event {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public int getNumberOfPetAttendees() {
+        return numberOfPetAttendees;
+    }
+
+    public void setNumberOfPetAttendees(int numberOfPetAttendees) {
+        this.numberOfPetAttendees = numberOfPetAttendees;
     }
 }
 

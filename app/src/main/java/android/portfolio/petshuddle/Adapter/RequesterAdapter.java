@@ -63,9 +63,9 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
 
         // then according to the position of the view assign the desired TextView 1 for the same
         TextView requesterNameTextView = currentItemView.findViewById(R.id.requesterNameTextView);
-        requesterNameTextView.setText(currentPetPosition.getPetName() + ", " +currentPetPosition.getAge());
+        requesterNameTextView.setText(currentPetPosition.getPetName() + ", " + currentPetPosition.getAge());
 
-        Button requesterProfileButton= currentItemView.findViewById(R.id.requesterProfileButton);
+        Button requesterProfileButton = currentItemView.findViewById(R.id.requesterProfileButton);
         requesterProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +89,7 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
         requestAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url ="http://10.0.2.2:8080/api/friendslist";
+                String url = "http://10.0.2.2:8080/api/friendslist";
 
                 JSONObject friendJson = new JSONObject();
 
@@ -98,7 +98,7 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
                     friendJson.put("friendId", currentPetPosition.getPetId());
                     friendJson.put("requestStatus", 'a');
 //                    Friend updatableFriend = new Friend(petId, currentPetPosition.getPetId());
-                } catch(JSONException ex) {
+                } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
 
@@ -126,15 +126,13 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                })
-                {
+                }) {
                     @Override
                     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                         int statusCode = response.statusCode;
 //                Log.i("codeis", String.valueOf(statusCode));
-                        if(statusCode == 201) {
-                        }
-                        else {
+                        if (statusCode == 201) {
+                        } else {
                         }
                         return super.parseNetworkResponse(response);
                     }
@@ -151,7 +149,7 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
 
     public void changeRequestersStatus(Friend updatableFriend) {
 
-        String url ="http://10.0.2.2:8080/api/friendslist/friendid/";
+        String url = "http://10.0.2.2:8080/api/friendslist/friendid/";
 
         int petId = updatableFriend.getPetId();
         int friendId = updatableFriend.getFriendId();
@@ -162,7 +160,7 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
             friendJson.put("petId", petId);
             friendJson.put("friendId", friendId);
             friendJson.put("requestStatus", requestStatus);
-        } catch(JSONException ex) {
+        } catch (JSONException ex) {
             ex.printStackTrace();
         }
 
@@ -175,15 +173,13 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        })
-        {
+        }) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;
-                if(statusCode == 200) {
+                if (statusCode == 200) {
                     Log.i("updated requester", "requester udpated");
-                }
-                else {
+                } else {
                 }
                 return super.parseNetworkResponse(response);
             }

@@ -125,7 +125,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User userProfile = snapshot.getValue(User.class);
-                if(userProfile != null) {
+                if (userProfile != null) {
                     String fullName = userProfile.getFullName();
                     userNameTextView.setText(fullName);
                     userProfileProgressBar.setVisibility(View.INVISIBLE);
@@ -139,7 +139,7 @@ public class UserProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "something went wrong", Toast.LENGTH_LONG).show();
             }
         });
-        if(currentUser != null) {
+        if (currentUser != null) {
             userEmailTextView.setText(currentUser.getEmail());
             userIdTextView.setText(currentUserId);
         }
@@ -154,12 +154,4 @@ public class UserProfileFragment extends Fragment {
         }
     };
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser != null) {
-//            Log.i("user is : ",  currentUser.getEmail());
-//        }
-//    }
 }
