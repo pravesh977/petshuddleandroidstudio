@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:textAlignment="center"
-    android:background="#CDE1EB">
+    android:background="@drawable/roundedeventbackground"
+    android:backgroundTint="#FFFFFF">
 
     <TextView
         android:id="@+id/petChooserTitle"
@@ -17,16 +18,18 @@
         android:textAlignment="center"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:textColor="#7600F5"
         />
 
     <Spinner
         android:id="@+id/spinnerMyPets"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         style="@style/PetsListStyle"
+        android:textAlignment="center"
         />
 
     <LinearLayout

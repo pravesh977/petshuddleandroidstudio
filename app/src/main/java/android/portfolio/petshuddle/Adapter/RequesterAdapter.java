@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -28,7 +29,9 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -127,6 +130,15 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
                         error.printStackTrace();
                     }
                 }) {
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("petsapiheader977", "petsapikey977");
+                        return headers;
+                    }
+
                     @Override
                     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                         int statusCode = response.statusCode;
@@ -174,6 +186,15 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
                 error.printStackTrace();
             }
         }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("petsapiheader977", "petsapikey977");
+                return headers;
+            }
+
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 int statusCode = response.statusCode;

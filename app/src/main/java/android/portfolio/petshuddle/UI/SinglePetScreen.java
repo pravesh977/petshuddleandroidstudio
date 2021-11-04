@@ -81,6 +81,7 @@ public class SinglePetScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_pet_screen);
 
+        Log.i("created", "single pet screen created");
 
         //getting values from the adapter of the selected pet ViewHolder
         int petId = getIntent().getIntExtra("petId", -1);
@@ -167,11 +168,19 @@ public class SinglePetScreen extends AppCompatActivity {
             friendRequestButton.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Log.i("started", "single pet screen started");
+        friendsIdList.clear();
         //getting a list of friends for current pet using its id
         String url = "http://10.0.2.2:8080/api/friendslist/friendsbypetid/";
 //        Log.i("current pet id is : ", String.valueOf(petId));
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + petId, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + getIntent().getIntExtra("petId", -1), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
@@ -213,7 +222,6 @@ public class SinglePetScreen extends AppCompatActivity {
         };
 
         MySingletonRequestQueue.getInstance(this).addToRequestQueue(request);
-
     }
 
     //handles the cancel button which sends the user back to the main tabbed view without making any changes
@@ -501,6 +509,7 @@ public class SinglePetScreen extends AppCompatActivity {
 
     public void getFriendsProfile() {
 
+        friendsForPetList.clear();
         JSONArray friendsIdJsonArray = new JSONArray(friendsIdList);
 //        Log.i("array lenght is : ", String.valueOf(friendsIdJsonArray.length()));
 //        Log.i("array is : ", String.valueOf(friendsIdJsonArray));
