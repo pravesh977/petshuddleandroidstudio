@@ -230,7 +230,7 @@ public class SingleEventScreen extends AppCompatActivity {
                 petsForEventsRecyclerView.setLayoutManager(new LinearLayoutManager(SingleEventScreen.this, LinearLayoutManager.HORIZONTAL, false) {
                     @Override
                     public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
-                        lp.width = getWidth() / 2;
+                        lp.width = (getWidth() * 3 )/ 5;
 //                        return super.checkLayoutParams(lp);
                         return true;
                     }

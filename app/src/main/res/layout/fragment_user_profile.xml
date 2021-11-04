@@ -124,10 +124,21 @@
             android:text="Sign Out"
             style="@style/MainButtons"
             android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/freepikTextView"
             android:layout_marginBottom="30dp"
             android:backgroundTint="#E85E5A"
             />
+
+        <TextView
+            android:id="@+id/freepikTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="App Icon made by Freepik from www.flaticon.com"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="5dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar

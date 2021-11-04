@@ -17,8 +17,8 @@
         style="@style/PetsListStyle"
         android:textAlignment="center"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
         android:textColor="#7600F5"
+        android:background="#F3FEB0"
         />
 
     <Spinner
@@ -47,7 +47,6 @@
             android:backgroundTint="#E85E5A"
             android:layout_weight="1"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
             />
         <Button
             android:id="@+id/choosePetButton"
@@ -59,7 +58,6 @@
             style="@style/MainButtons"
             android:layout_weight="1"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
             />
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
