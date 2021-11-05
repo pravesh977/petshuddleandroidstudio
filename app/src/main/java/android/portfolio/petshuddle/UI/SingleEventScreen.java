@@ -136,7 +136,7 @@ public class SingleEventScreen extends AppCompatActivity {
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hi, check out this event!" + "\n" + eventTitle + "\n" + "Details: " + eventDetails + "\n" + "Time: " + eventDateTimeString);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hi, check out this event!" + "\n" + eventTitle + "\n" + "Details: " + eventDetails + "\n" + "Time: " + eventDateTimeString + "\n" + "Location: " + eventLocation);
                 sendIntent.setType("text/plain");
 
                 Intent shareIntent = Intent.createChooser(sendIntent, null);

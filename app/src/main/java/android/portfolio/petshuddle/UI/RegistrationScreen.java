@@ -115,7 +115,7 @@ public class RegistrationScreen extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             //Log.i("registerfailed", "Creation of new user failed", task.getException());
-                            Toast.makeText(RegistrationScreen.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegistrationScreen.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             registerProgressBar.setVisibility(View.GONE);
                         }
 
