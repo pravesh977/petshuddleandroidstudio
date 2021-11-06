@@ -34,7 +34,7 @@
             android:ems="10"
             android:hint="email"
             android:inputType="textEmailAddress"
-            android:text="sashadog@mail.com" />
+            />
 
         <EditText
             android:id="@+id/loginPasswordEditText"
@@ -46,7 +46,7 @@
             android:ems="10"
             android:hint="password"
             android:inputType="textPassword"
-            android:text="Sashadog" />
+            />
     </LinearLayout>
 
     <LinearLayout

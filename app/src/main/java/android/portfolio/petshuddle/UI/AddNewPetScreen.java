@@ -126,7 +126,9 @@ public class AddNewPetScreen extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         //RequestQueue queue = MySingletonRequestQueue.getInstance(this).getRequestQueue();
-        String url = "http://10.0.2.2:8080/api/petshuddle";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle";
+//        for local db access
+//        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle";
 
         JSONObject petJson = new JSONObject();
         try {

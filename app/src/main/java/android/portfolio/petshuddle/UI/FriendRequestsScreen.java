@@ -61,7 +61,7 @@ public class FriendRequestsScreen extends AppCompatActivity {
 
         int petId = getIntent().getIntExtra("petId", -1);
         //getting a list of friend requests that are not yet accepted for current pet using its id
-        String url = "http://10.0.2.2:8080/api/friendslist/friendrequests/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/friendslist/friendrequests/";
 //        Log.i("this pet is : ", String.valueOf(petId));
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + petId, null, new Response.Listener<JSONArray>() {
@@ -112,7 +112,7 @@ public class FriendRequestsScreen extends AppCompatActivity {
 
         JSONArray requestersIdJsonArray = new JSONArray(requestIdList);
 
-        String url = "http://10.0.2.2:8080/api/petshuddle/petfriends/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/petfriends/";
 //        List<Pet> friendsForPetList = new ArrayList<>();
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, requestersIdJsonArray, new Response.Listener<JSONArray>() {

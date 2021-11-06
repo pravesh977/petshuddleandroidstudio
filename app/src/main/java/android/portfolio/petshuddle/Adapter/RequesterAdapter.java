@@ -92,7 +92,7 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
         requestAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://10.0.2.2:8080/api/friendslist";
+                String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/friendslist";
 
                 JSONObject friendJson = new JSONObject();
 
@@ -161,7 +161,7 @@ public class RequesterAdapter extends ArrayAdapter<Pet> {
 
     public void changeRequestersStatus(Friend updatableFriend) {
 
-        String url = "http://10.0.2.2:8080/api/friendslist/friendid/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/friendslist/friendid/";
 
         int petId = updatableFriend.getPetId();
         int friendId = updatableFriend.getFriendId();

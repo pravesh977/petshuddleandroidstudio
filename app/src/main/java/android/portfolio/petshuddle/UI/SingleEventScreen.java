@@ -186,7 +186,7 @@ public class SingleEventScreen extends AppCompatActivity {
         //setting up the horizontal recyclerview containing the pets for the event
         petsListForEvent.clear();
 //        Log.i("started", " app started");
-        String url = "http://10.0.2.2:8080/api/events/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events/";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + eventId, null, new Response.Listener<JSONObject>() {
             @Override
@@ -320,7 +320,7 @@ public class SingleEventScreen extends AppCompatActivity {
 //            return;
 //        }
         // Instantiate the RequestQueue.
-        String url = "http://10.0.2.2:8080/api/events/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events/";
 
         JSONObject petJson = new JSONObject();
         try {
@@ -417,7 +417,7 @@ public class SingleEventScreen extends AppCompatActivity {
 
             List<Pet> myPetsList = new ArrayList<>();
 
-            String url = "http://10.0.2.2:8080/api/petshuddle/userid/";
+            String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/userid/";
 
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + currentUser.getUid(), null, new Response.Listener<JSONArray>() {
                 @Override
@@ -500,7 +500,7 @@ public class SingleEventScreen extends AppCompatActivity {
     //gets adds my pet to an event and sends it ot the database
     public void addPetToEvent(Pet myPet) {
         // Instantiate the RequestQueue.
-        String url = "http://10.0.2.2:8080/api/events/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events/";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url + eventId + "/pet/" + myPet.getPetId(), null, new Response.Listener<JSONObject>() {
             @Override

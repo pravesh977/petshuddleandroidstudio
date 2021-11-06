@@ -57,7 +57,7 @@ public class ReportScreen extends AppCompatActivity {
         public void onClick(View view) {
             reportProgressBar.setVisibility(View.VISIBLE);
             String selectedMonth = monthlySpinner.getSelectedItem().toString();
-            String url = "http://10.0.2.2:8080/api/events/eventsbymonth/";
+            String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events/eventsbymonth/";
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + selectedMonth, null, new Response.Listener<JSONObject>() {
                 @Override

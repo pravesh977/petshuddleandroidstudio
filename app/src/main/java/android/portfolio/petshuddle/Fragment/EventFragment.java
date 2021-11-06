@@ -207,7 +207,7 @@ public class EventFragment extends Fragment {
         eventProgressBar.setVisibility(View.VISIBLE);
         eventList.clear();
 
-        String url = "http://10.0.2.2:8080/api/events/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events/";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
@@ -224,7 +224,6 @@ public class EventFragment extends Fragment {
                         String eventDate = reqobject.getString("eventDate");
                         String userId = reqobject.getString("userId");
                         JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
-//                        Log.i("length of pets attendees: ", String.valueOf(petJsonArray.length()));
                         int numberOfEventAttendees = petJsonArray.length();
                         Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId, numberOfEventAttendees);
                         eventList.add(responseEvent);
@@ -260,7 +259,7 @@ public class EventFragment extends Fragment {
 
         if (currentUserId.equals(userId)) {
 
-            String url = "http://10.0.2.2:8080/api/events/";
+            String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events/";
 
 //        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url + deleteEventId, null, new Response.Listener<JSONObject>() {
 //            @Override

@@ -154,7 +154,7 @@ public class SearchFragment extends Fragment {
 
             if (query.equals("")) {
 
-                String url = "http://10.0.2.2:8080/api/petshuddle";
+                String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle";
 
                 JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                     @Override
@@ -208,7 +208,7 @@ public class SearchFragment extends Fragment {
 
             } else {
                 //            searchedPetsList.clear();
-                String url = "http://10.0.2.2:8080/api/petshuddle/searchpets/";
+                String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/searchpets/";
 
                 JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
                     @Override
@@ -266,7 +266,7 @@ public class SearchFragment extends Fragment {
 
 
             if (query.equals("")) {
-                String url = "http://10.0.2.2:8080/api/events";
+                String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events";
                 JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -282,10 +282,9 @@ public class SearchFragment extends Fragment {
                                 String eventDate = reqobject.getString("eventDate");
                                 String userId = reqobject.getString("userId");
                                 JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
-//                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
-                                Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
+                                int numberOfEventAttendees = petJsonArray.length();
+                                Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId, numberOfEventAttendees);
                                 searchedEventsList.add(responseEvent);
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -313,7 +312,7 @@ public class SearchFragment extends Fragment {
                 };
                 MySingletonRequestQueue.getInstance(this.getActivity()).addToRequestQueue(request);
             } else {
-                String url = "http://10.0.2.2:8080/api/events/searchevents/";
+                String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/events/searchevents/";
                 JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + query, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -329,8 +328,8 @@ public class SearchFragment extends Fragment {
                                 String eventDate = reqobject.getString("eventDate");
                                 String userId = reqobject.getString("userId");
                                 JSONArray petJsonArray = reqobject.getJSONArray("petsListForEvent");
-//                        Log.i("lengthopets: ", String.valueOf(petJsonArray.length()));
-                                Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId);
+                                int numberOfEventAttendees = petJsonArray.length();
+                                Event responseEvent = new Event(eventId, eventTitle, eventDetails, eventLocation, eventDate, userId, numberOfEventAttendees);
                                 searchedEventsList.add(responseEvent);
 
                             } catch (JSONException e) {

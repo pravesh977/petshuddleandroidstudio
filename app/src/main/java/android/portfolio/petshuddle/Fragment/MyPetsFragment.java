@@ -163,7 +163,11 @@ public class MyPetsFragment extends Fragment {
 
         // Instantiate the RequestQueue.
         //RequestQueue queue = MySingletonRequestQueue.getInstance(this.getActivity()).getRequestQueue();
-        String url = "http://10.0.2.2:8080/api/petshuddle/userid/";
+        //        for local db access
+//        String url = "http://10.0.2.2:8080/api/petshuddle/userid/";
+
+//        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/userid/";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + currentUser.getUid(), null, new Response.Listener<JSONArray>() {
             @Override
@@ -280,7 +284,7 @@ public class MyPetsFragment extends Fragment {
 
     public void handleDeletePet(Pet currentPet, int position) {
 
-        String url = "http://10.0.2.2:8080/api/petshuddle/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/";
 
         StringRequest request = new StringRequest(Request.Method.DELETE, url + currentPet.getPetId(), new Response.Listener<String>() {
             @Override

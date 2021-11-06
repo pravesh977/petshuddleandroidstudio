@@ -29,7 +29,8 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_margin="20dp"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:background="#99FFFFFF">
 
                 <EditText
                     android:id="@+id/editTextEventTitle"

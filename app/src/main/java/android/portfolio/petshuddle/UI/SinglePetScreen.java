@@ -73,7 +73,6 @@ public class SinglePetScreen extends AppCompatActivity {
     private TextView textViewNumberOfFriends;
     List<Pet> friendsForPetList = new ArrayList<>();
     private MyPetsAdapter petFriendsAdapter;
-    private LinearLayout petFloatingLinearLayout;
     private Button friendRequestButton;
 
     @Override
@@ -113,8 +112,10 @@ public class SinglePetScreen extends AppCompatActivity {
         addFriendButton = findViewById(R.id.addFriendButton);
         petsFriendsRecyclerView = findViewById(R.id.petsFriendsRecyclerView);
         textViewNumberOfFriends = findViewById(R.id.textViewNumberOfFriends);
-        petFloatingLinearLayout = findViewById(R.id.petFloatingLinearLayout);
         friendRequestButton = findViewById(R.id.friendRequestButton);
+
+        editSpeciesSpinner.setEnabled(false);
+        editGenderSpinner.setEnabled(false);
 
 //        Button requestButton = new Button(new ContextThemeWrapper(this, R.style.MainButtons), null, 0);
 //        requestButton.setText("Friend Requests");
@@ -160,7 +161,6 @@ public class SinglePetScreen extends AppCompatActivity {
         if (currentUserId.equals(petUserId)) {
             startEditPetButton.setVisibility(View.VISIBLE);
             saveEditPetButton.setVisibility(View.VISIBLE);
-//            petFloatingLinearLayout.addView(requestButton);
             friendRequestButton.setVisibility(View.VISIBLE);
         } else {
             startEditPetButton.setVisibility(View.INVISIBLE);
@@ -177,7 +177,7 @@ public class SinglePetScreen extends AppCompatActivity {
         Log.i("started", "single pet screen started");
         friendsIdList.clear();
         //getting a list of friends for current pet using its id
-        String url = "http://10.0.2.2:8080/api/friendslist/friendsbypetid/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/friendslist/friendsbypetid/";
 //        Log.i("current pet id is : ", String.valueOf(petId));
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + getIntent().getIntExtra("petId", -1), null, new Response.Listener<JSONArray>() {
@@ -243,13 +243,13 @@ public class SinglePetScreen extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editTextPetName, InputMethodManager.SHOW_IMPLICIT);
 
-        editSpeciesSpinner.setClickable(true);
-        editSpeciesSpinner.setFocusable(true);
-        editSpeciesSpinner.setFocusableInTouchMode(true);
+//        editSpeciesSpinner.setClickable(true);
+//        editSpeciesSpinner.setFocusable(true);
+//        editSpeciesSpinner.setFocusableInTouchMode(true);
 
-        editGenderSpinner.setClickable(true);
-        editGenderSpinner.setFocusable(true);
-        editGenderSpinner.setFocusableInTouchMode(true);
+//        editGenderSpinner.setClickable(true);
+//        editGenderSpinner.setFocusable(true);
+//        editGenderSpinner.setFocusableInTouchMode(true);
 
         editTextPetBreed.setClickable(true);
         editTextPetBreed.setFocusable(true);
@@ -265,6 +265,9 @@ public class SinglePetScreen extends AppCompatActivity {
         editTextPetDescription.setFocusable(true);
         editTextPetDescription.setFocusableInTouchMode(true);
         editTextPetDescription.setCursorVisible(true);
+
+        editGenderSpinner.setEnabled(true);
+        editSpeciesSpinner.setEnabled(true);
 
     }
 
@@ -311,7 +314,7 @@ public class SinglePetScreen extends AppCompatActivity {
         }
 
         // Instantiate the RequestQueue.
-        String url = "http://10.0.2.2:8080/api/petshuddle/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/";
 
         JSONObject petJson = new JSONObject();
         try {
@@ -374,7 +377,7 @@ public class SinglePetScreen extends AppCompatActivity {
 
             List<Pet> myPetsList = new ArrayList<>();
 
-            String url = "http://10.0.2.2:8080/api/petshuddle/userid/";
+            String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/userid/";
 
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + currentUser.getUid(), null, new Response.Listener<JSONArray>() {
                 @Override
@@ -452,7 +455,7 @@ public class SinglePetScreen extends AppCompatActivity {
         int friendId = getIntent().getIntExtra("petId", -1);
         char requestStatus = 'p';
 
-        String url = "http://10.0.2.2:8080/api/friendslist";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/friendslist";
 
         JSONObject friendJson = new JSONObject();
         try {
@@ -522,7 +525,7 @@ public class SinglePetScreen extends AppCompatActivity {
 //        }
 
 
-        String url = "http://10.0.2.2:8080/api/petshuddle/petfriends/";
+        String url = "http://petshuddlefinal-env.eba-fzpmwzky.us-east-2.elasticbeanstalk.com/api/petshuddle/petfriends/";
 //        List<Pet> friendsForPetList = new ArrayList<>();
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, friendsIdJsonArray, new Response.Listener<JSONArray>() {
