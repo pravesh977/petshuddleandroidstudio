@@ -26,6 +26,8 @@ public class MyEventNotificationReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.pawnotification)
                 .setContentTitle("Event coming up: " + intent.getStringExtra("eventTitle"))
                 .setContentText(intent.getStringExtra("eventDetails"))
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(intent.getStringExtra("eventDetails")))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
