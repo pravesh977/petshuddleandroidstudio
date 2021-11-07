@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.portfolio.petshuddle.R;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -24,7 +23,7 @@ public class MyEventNotificationReceiver extends BroadcastReceiver {
         //throw new UnsupportedOperationException("Not yet implemented");
         createNotificationChannel(context, channel_id);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel_id)
-                .setSmallIcon(R.drawable.addeventfab)
+                .setSmallIcon(R.drawable.pawnotification)
                 .setContentTitle("Event coming up: " + intent.getStringExtra("eventTitle"))
                 .setContentText(intent.getStringExtra("eventDetails"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
